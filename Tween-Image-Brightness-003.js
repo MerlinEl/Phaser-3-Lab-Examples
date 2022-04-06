@@ -3,6 +3,7 @@
  * @copyright    2022
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+ 
 var config = {
     type: Phaser.WEBGL,
     parent: 'phaser-example',
