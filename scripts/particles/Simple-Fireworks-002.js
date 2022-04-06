@@ -52,7 +52,7 @@ function create ()
     this.input.on('pointerdown', function (pointer) {
 
         var randomColor = frames[Phaser.Math.Between(0, 4)];
-        new Firework(deathZone, pointer.x, randomColor);
+        new FireworkTail(deathZone, pointer.x, randomColor);
     })
 }
 
@@ -62,23 +62,23 @@ function startFireworks(){
 
         var randomColor = frames[Phaser.Math.Between(0, 4)];
         var randomOffsetX = Phaser.Math.Between(deathZone.x, deathZone.x + deathZone.width);
-        new Firework(deathZone, randomOffsetX, randomColor);
+        new FireworkTail(deathZone, randomOffsetX, randomColor);
 
     }, 500);
 }
 
-class Spark{
+class FireworkCrown{
 
     constructor(colorName){
 
-        this.emiter = particles.createEmitter({
+        this.emiter1 = particles.createEmitter({
 			frame: colorName, //frames,
 			angle: { start: 0, end: 360, steps: 16 },
 			lifespan: 700,
 			speed: 250,
 			quantity: 16,
 			scale: { start: 0.01, end: .5 },
-			alpha: 1,
+			alpha: { start: 1, end: 0 },
 			blendMode: 'ADD',
 			on: false,
             emitCallback:()=>{
@@ -86,12 +86,26 @@ class Spark{
                 //console.log("done")
             }
 		});
+
+		this.emiter2 = particles.createEmitter({
+			frame: frames,
+			angle: { start: 0, end: 360, steps: 8 },
+			lifespan: 700,
+			speed: 250,
+			quantity: 8,
+			scale: { start: 0.03, end: 1 },
+            alpha: { start: 1, end: 0 },
+			blendMode: 'ADD',
+			on: false
+		});
+
     }
     fire(pos){
-        this.emiter.emitParticleAt(pos.x, pos.y);
+        this.emiter1.emitParticleAt(pos.x, pos.y);
+        this.emiter2.emitParticleAt(pos.x, pos.y);
     }
 }
-class Firework{
+class FireworkTail{
     
     emiter;
     rect;
@@ -112,7 +126,7 @@ class Firework{
             speedY: { min: 200, max: 500 },
             quantity: 2,
             gravity: 200,
-            scale: { start: 0.3, end: 0, ease: 'Linear' },
+            scale: { start: 0.2, end: 0, ease: 'Linear' },
             alpha: { start: 1, end: 0},
             blendMode: 'ADD',
             deathZone: { type: 'onLeave', source: deathZone },
@@ -122,8 +136,8 @@ class Firework{
                 if (this.emitter.y.counter <= this.emitter.y.end+10) {
                     
                     this.emitter.stop();
-                    var spark = new Spark(colorName)
-                    spark.fire({x:this.emitter.x.propertyValue, y:this.emitter.y.end});
+                    var fireworkCrown = new FireworkCrown(colorName)
+                    fireworkCrown.fire({x:this.emitter.x.propertyValue, y:this.emitter.y.end});
                      //this.emitter.killAll();
                 }
             }
