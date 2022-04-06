@@ -1,5 +1,5 @@
 /**
- * @author       IcyFire <?.com>
+ * @author       IcyFire <tkrivanek2@gmail.com>
  * @copyright    2022
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
