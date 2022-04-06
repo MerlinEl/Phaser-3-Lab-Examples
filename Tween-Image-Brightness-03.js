@@ -23,7 +23,6 @@ function preload() {
 
 function create() {
 
-	// add both images in scene
     var lulu1 = this.add.image(400, 300, 'lulu').setScale(1.5);
     var lulu2 = this.add.image(400, 300, 'lulu').setScale(1.5).setTintFill(0xffffff);
     this.tweens.add({
