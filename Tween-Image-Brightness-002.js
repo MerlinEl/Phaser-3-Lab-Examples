@@ -49,6 +49,9 @@ function create() {
             onComplete: function(){
 
                 console.log("Finished with:"+(1+this.progress));
+                // ctx.drawImage(originalTexture, 0, 0); // draw original image
+                // tween.restart();
+                // tween.play();
             }
     });
 
