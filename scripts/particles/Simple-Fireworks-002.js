@@ -72,7 +72,16 @@ class FireworkCrown{
     constructor(colorName){
 
         this.emiter1 = particles.createEmitter({
-			frame: colorName, //frames,
+            frame: colorName,
+            lifespan: 800,
+            speed: { min: 50, max: 300 },
+            scale: { start: 0.2, end: 0 },
+            blendMode: 'ADD',
+            on: false,
+        });
+
+        this.emiter2 = particles.createEmitter({
+			frame: colorName,
 			angle: { start: 0, end: 360, steps: 16 },
 			lifespan: 700,
 			speed: 250,
@@ -87,7 +96,7 @@ class FireworkCrown{
             }
 		});
 
-		this.emiter2 = particles.createEmitter({
+		this.emiter3 = particles.createEmitter({
 			frame: frames,
 			angle: { start: 0, end: 360, steps: 8 },
 			lifespan: 700,
@@ -101,8 +110,10 @@ class FireworkCrown{
 
     }
     fire(pos){
-        this.emiter1.emitParticleAt(pos.x, pos.y);
+        this.emiter1.setPosition(pos.x, pos.y);
+        this.emiter1.explode(50);
         this.emiter2.emitParticleAt(pos.x, pos.y);
+        this.emiter3.emitParticleAt(pos.x, pos.y);
     }
 }
 class FireworkTail{
@@ -113,7 +124,7 @@ class FireworkTail{
         
         var randomTop = { 
             start: rect.y + rect.height, 
-            end: Phaser.Math.Between(rect.y, rect.y+100), 
+            end: Phaser.Math.Between(rect.y, rect.y+200), 
             steps: 120 
         };
         this.emitter = particles.createEmitter({
