@@ -18,6 +18,7 @@ var config = {
 var game = new Phaser.Game(config);
 var originalTexture;
 var newTexture;
+var lulu1;
 var lulu2;
 
 function preload() {
@@ -35,8 +36,9 @@ function create() {
 	// get drawing context
     var ctx = getImageContext(newTexture, originalTexture);
 
-	// add new image to scene at same place
-    lulu2 = this.add.image(400, 300, 'lulu_new');
+	// add both images in scene
+    lulu1 = this.add.image(200, 300, 'lulu');
+    lulu2 = this.add.image(600, 300, 'lulu_new');
 
     var tween = this.tweens.addCounter({
             duration: 2000,
@@ -67,7 +69,11 @@ function cloneImage(game, image, name){
     return game.textures.createCanvas(name, image.width, image.height);
 }
 
-/** @param {number} mul brightness multiplier */
+/** 
+ * @param {number} ctx
+ * @param {image} image
+ * @param {number} mul brightness multiplier 
+*/
 function setBrightness(ctx, image, mul){
 
     var pixels = ctx.getImageData(0, 0, image.width, image.height);
