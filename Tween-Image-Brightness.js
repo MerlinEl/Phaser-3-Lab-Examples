@@ -36,7 +36,7 @@ function create() {
     var newTexture = cloneImage(this, originalTexture, 'dude_new');
 	
 	// get drawing context
-    var ctx = cloneContext(newTexture, originalTexture);
+    var ctx = getImageContext(newTexture, originalTexture);
 	
 	// add both images to scene at same place
     dude = this.add.image(100, 100, 'dude');
@@ -56,7 +56,7 @@ function create() {
     });
 }
 
-function cloneContext(imageTarget, imageSource){
+function getImageContext(imageTarget, imageSource){
 
     // get drawing context of target image
     var ctx = imageTarget.getSourceImage().getContext('2d');
