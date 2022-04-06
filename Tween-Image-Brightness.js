@@ -31,16 +31,22 @@ function preload()
 function create() {
     // get image
     originalTexture = this.textures.get('dude').getSourceImage();
-    // clone image with different name
+    
+	// clone image with different name
     var newTexture = cloneImage(this, originalTexture, 'dude_new');
-    var ctx = cloneGraphics(newTexture, originalTexture);
-
+	
+	// get drawing context
+    var ctx = cloneContext(newTexture, originalTexture);
+	
+	// add both images to scene at same place
     dude = this.add.image(100, 100, 'dude');
     dude2 = this.add.image(100, 100, 'dude_new');
-
+	
+	// draw color on new image
     var color = Phaser.Display.Color.IntegerToRGB(0xffffff);
     createSilhouette(ctx, newTexture, color);
-
+	
+	// tween new image alpa
     dude2.alpha = 0;
     this.tweens.add({
         targets: dude2,
@@ -50,9 +56,9 @@ function create() {
     });
 }
 
-function cloneGraphics(imageTarget, imageSource){
+function cloneContext(imageTarget, imageSource){
 
-    // get new image ctx
+    // get drawing context of target image
     var ctx = imageTarget.getSourceImage().getContext('2d');
     // draw image on ctx
     ctx.drawImage(imageSource, 0, 0);
