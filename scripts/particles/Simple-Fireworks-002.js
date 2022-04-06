@@ -19,7 +19,7 @@ var config = {
 var game = new Phaser.Game(config);
 var particles;
 var emitter;
-var margin = 80;
+var margin = 100;
 var deathZone;
 var frames = ["blue", "green", "red", "white", "yellow"];
 
@@ -66,21 +66,29 @@ function startFireworks(){
 
     }, 500);
 }
-class Sparks{
 
-    constructor(pos, colorName){
+class Spark{
 
-       /* const emitter = this.add.particles(element).createEmitter({
-            speed: { min: -400, max: 400 },
-            angle: { min: 0, max: 360 },
-            scale: { start: 0.5, end: 0 },
-            blendMode: "SCREEN",
-            active: false,
-            lifespan: 800,
-            gravityY: 200,
-            alpha: { start: 1, end: 0.7 }
-        });
-        emitter.explode(80, pointer.x, pointer.y);*/
+    constructor(colorName){
+
+        this.emiter = particles.createEmitter({
+			frame: colorName, //frames,
+			angle: { start: 0, end: 360, steps: 16 },
+			lifespan: 700,
+			speed: 250,
+			quantity: 16,
+			scale: { start: 0.01, end: .5 },
+			alpha: 1,
+			blendMode: 'ADD',
+			on: false,
+            emitCallback:()=>{
+
+                //console.log("done")
+            }
+		});
+    }
+    fire(pos){
+        this.emiter.emitParticleAt(pos.x, pos.y);
     }
 }
 class Firework{
@@ -89,7 +97,11 @@ class Firework{
     rect;
     constructor(rect, offsetX, colorName){
         
-        var randomTop = { start: rect.y + rect.height, end: rect.y, steps: 120 };
+        var randomTop = { 
+            start: rect.y + rect.height, 
+            end: Phaser.Math.Between(rect.y, rect.y+100), 
+            steps: 120 
+        };
         this.emitter = particles.createEmitter({
             frame: colorName,
             radial: false,
@@ -110,6 +122,8 @@ class Firework{
                 if (this.emitter.y.counter <= this.emitter.y.end+10) {
                     
                     this.emitter.stop();
+                    var spark = new Spark(colorName)
+                    spark.fire({x:this.emitter.x.propertyValue, y:this.emitter.y.end});
                      //this.emitter.killAll();
                 }
             }
