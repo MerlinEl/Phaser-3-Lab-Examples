@@ -23,45 +23,59 @@ var margin = 80;
 var deathZone;
 var frames = ["blue", "green", "red", "white", "yellow"];
 
-function preload ()
-{
+function preload () {
+
     this.load.atlas('flares', 'assets/particles/flares.png', 'assets/particles/flares.json');
-	deathZone = new Phaser.Geom.Rectangle(
-		margin/2, 
-		margin/2, 
-		config.width - this.margin, 
-		config.height - this.margin
-	);
 }
 
 function create ()
 {
     particles = this.add.particles('flares');
-    launchFirework();
+    // define deathZone
+    deathZone = new Phaser.Geom.Rectangle(
+		margin/2, 
+		margin/2, 
+		config.width - margin, 
+		config.height - margin
+	);
+    // visualise deathZone
+    var r1 = this.add.rectangle(
+        deathZone.x + deathZone.width / 2, 
+        deathZone.y + deathZone.height / 2, 
+        deathZone.width, 
+        deathZone.height
+    );
+    r1.setStrokeStyle(2, 0x1a65ac);
+    
+    this.input.on('pointerdown', function (pointer) {
+
+        launchFirework();
+    })
 }
+
 function launchFirework(){
 
     var randomColor = frames[Phaser.Math.Between(0, 4)];
     var randomOffsetX = Phaser.Math.Between(margin/2, config.width - margin);
     var randomTop = { start: config.height - margin, end: margin, steps: 120 };
     emitter = particles.createEmitter({
-            frame: randomColor,
-            radial: false,
-            x: randomOffsetX,
-            y: randomTop,
-            lifespan: 1200,
-            speedX: { min: -40, max: 40 }, // tail thickness
-            speedY: { min: 200, max: 500 },
-            quantity: 2,
-            gravity: 200,
-            scale: { start: 0.3, end: 0, ease: 'Linear' },
-            alpha: { start: 1, end: 0},
-            blendMode: 'ADD',
-            deathZone: { type: 'onLeave', source: this.deathZone },
-            emitCallback:()=>{
+        frame: randomColor,
+        radial: false,
+        x: randomOffsetX,
+        y: randomTop,
+        lifespan: 1200,
+        speedX: { min: -40, max: 40 }, // tail thickness
+        speedY: { min: 200, max: 500 },
+        quantity: 2,
+        gravity: 200,
+        scale: { start: 0.3, end: 0, ease: 'Linear' },
+        alpha: { start: 1, end: 0},
+        blendMode: 'ADD',
+        deathZone: { type: 'onLeave', source: deathZone },
+        emitCallback:()=>{
 
-			// Ctrace("update firework y:{0} top:{1}", this.emitter.y.counter, randomTop.end)
-			if (emitter.y.counter < emitter.y.end*2) {
+			// Ctrace("update firework y:{0} top:{1}", this.emitter.y.counter, emitter.y.end)
+			if (emitter.y.counter < 200) {
 				
 				emitter.stop();
 			}
