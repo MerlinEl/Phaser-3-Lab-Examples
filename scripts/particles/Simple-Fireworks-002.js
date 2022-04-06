@@ -49,36 +49,41 @@ function create ()
     
     this.input.on('pointerdown', function (pointer) {
 
-        launchFirework();
+        var randomColor = frames[Phaser.Math.Between(0, 4)];
+        new Firework(deathZone, pointer.x, randomColor);
     })
 }
 
-function launchFirework(){
+class Firework{
+    
+    emiter;
+    rect;
+    constructor(rect, offsetX, colorName){
+        
+        //var randomOffsetX = Phaser.Math.Between(rect.x, rect.x + rect.width);
+        var randomTop = { start: rect.y + rect.height, end: rect.y, steps: 120 };
+        this.emitter = particles.createEmitter({
+            frame: colorName,
+            radial: false,
+            x: offsetX,
+            y: randomTop,
+            lifespan: 1200,
+            speedX: { min: -40, max: 40 }, // tail thickness
+            speedY: { min: 200, max: 500 },
+            quantity: 2,
+            gravity: 200,
+            scale: { start: 0.3, end: 0, ease: 'Linear' },
+            alpha: { start: 1, end: 0},
+            blendMode: 'ADD',
+            deathZone: { type: 'onLeave', source: deathZone },
+            emitCallback:()=>{
 
-    var randomColor = frames[Phaser.Math.Between(0, 4)];
-    var randomOffsetX = Phaser.Math.Between(margin/2, config.width - margin);
-    var randomTop = { start: config.height - margin, end: margin, steps: 120 };
-    emitter = particles.createEmitter({
-        frame: randomColor,
-        radial: false,
-        x: randomOffsetX,
-        y: randomTop,
-        lifespan: 1200,
-        speedX: { min: -40, max: 40 }, // tail thickness
-        speedY: { min: 200, max: 500 },
-        quantity: 2,
-        gravity: 200,
-        scale: { start: 0.3, end: 0, ease: 'Linear' },
-        alpha: { start: 1, end: 0},
-        blendMode: 'ADD',
-        deathZone: { type: 'onLeave', source: deathZone },
-        emitCallback:()=>{
-
-			// Ctrace("update firework y:{0} top:{1}", this.emitter.y.counter, emitter.y.end)
-			if (emitter.y.counter < 200) {
-				
-				emitter.stop();
-			}
-		}
-    });
+                //console.log("top:" + this.emitter.y.counter + "end:" + this.emitter.y.end)
+                if (this.emitter.y.counter <= this.emitter.y.end+10) {
+                    
+                    this.emitter.stop();
+                }
+            }
+        });
+    }
 }
