@@ -1,3 +1,9 @@
+/**
+ * @author       MerlinEl <merlin_el@hotmail.com>
+ * @copyright    2022
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+ 
 var config = {
     type: Phaser.CANVAS,
     parent: 'phaser-example',
