@@ -66,7 +66,23 @@ function startFireworks(){
 
     }, 500);
 }
+class Sparks{
 
+    constructor(pos, colorName){
+
+       /* const emitter = this.add.particles(element).createEmitter({
+            speed: { min: -400, max: 400 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.5, end: 0 },
+            blendMode: "SCREEN",
+            active: false,
+            lifespan: 800,
+            gravityY: 200,
+            alpha: { start: 1, end: 0.7 }
+        });
+        emitter.explode(80, pointer.x, pointer.y);*/
+    }
+}
 class Firework{
     
     emiter;
