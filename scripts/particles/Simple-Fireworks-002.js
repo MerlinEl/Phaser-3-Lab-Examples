@@ -47,11 +47,24 @@ function create ()
     );
     r1.setStrokeStyle(2, 0x1a65ac);
     
+    startFireworks();
+
     this.input.on('pointerdown', function (pointer) {
 
         var randomColor = frames[Phaser.Math.Between(0, 4)];
         new Firework(deathZone, pointer.x, randomColor);
     })
+}
+
+function startFireworks(){
+
+    setInterval(function(){
+
+        var randomColor = frames[Phaser.Math.Between(0, 4)];
+        var randomOffsetX = Phaser.Math.Between(deathZone.x, deathZone.x + deathZone.width);
+        new Firework(deathZone, randomOffsetX, randomColor);
+
+    }, 500);
 }
 
 class Firework{
@@ -60,7 +73,6 @@ class Firework{
     rect;
     constructor(rect, offsetX, colorName){
         
-        //var randomOffsetX = Phaser.Math.Between(rect.x, rect.x + rect.width);
         var randomTop = { start: rect.y + rect.height, end: rect.y, steps: 120 };
         this.emitter = particles.createEmitter({
             frame: colorName,
@@ -82,6 +94,7 @@ class Firework{
                 if (this.emitter.y.counter <= this.emitter.y.end+10) {
                     
                     this.emitter.stop();
+                     //this.emitter.killAll();
                 }
             }
         });
