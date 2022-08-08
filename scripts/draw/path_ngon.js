@@ -95,6 +95,8 @@ function createNgon(x, y, w, pointsCount) {
             y + center_x + r * Math.sin(step * stepRad + angleRadOffset)
         )
     }
+    var firstPoint = getPointOnCircle(0); // fix gap in outline
+    path.lineTo(firstPoint.x, firstPoint.y);
     return path;
 }
 
