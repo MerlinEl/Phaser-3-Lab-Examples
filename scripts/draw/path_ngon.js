@@ -1,3 +1,5 @@
+//https://phaser.io/phaser3/devlog/128
+//https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Graphics.html
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -59,7 +61,7 @@ function update() {
     graphics.fillStyle(0x0000ff, 1);
     graphics.fillPoints(pathNgon.getPoints());
     graphics.lineStyle(10, 0x00ff00, 1);
-    graphics.strokePoints(pathNgon.getPoints(), true);
+    graphics.strokePoints(pathNgon.getPoints());
     //pathNgon.draw(graphics);
 }
 
