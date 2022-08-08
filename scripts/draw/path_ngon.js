@@ -30,6 +30,15 @@ function create() {
 
     // NGON [x, y, width, height, points count]
     pathNgon = createNgon(300, 100, 220, 5)
+
+    // Cubic Bezier
+    var startPoint = new Phaser.Math.Vector2(0, 320);
+    var controlPoint1 = new Phaser.Math.Vector2(100, 100);
+    var controlPoint2 = new Phaser.Math.Vector2(200, 100);
+    var endPoint = new Phaser.Math.Vector2(300, 320);
+    var curve = new Phaser.Curves.CubicBezier(startPoint, controlPoint1, controlPoint2, endPoint);
+    var r = this.add.curve(200, 320, curve, 0x00aa00);
+    r.setStrokeStyle(4, 0xff0000);
 }
 
 function update() {
@@ -49,8 +58,9 @@ function update() {
     // Draw NGON
     graphics.fillStyle(0x0000ff, 1);
     graphics.fillPoints(pathNgon.getPoints());
-    graphics.lineStyle(2, 0x00ff00, 2);
-    pathNgon.draw(graphics);
+    graphics.lineStyle(10, 0x00ff00, 1);
+    graphics.strokePoints(pathNgon.getPoints(), true);
+    //pathNgon.draw(graphics);
 }
 
 
