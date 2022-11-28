@@ -2,15 +2,15 @@ var config = {
     type: Phaser.AUTO,
     backgroundColor: '#2dab2d',
     scale: {
-        mode: Phaser.Scale.NONE,
+        //mode: Phaser.Scale.NONE,
         parent: 'phaser-example',
         width: 1024,
         height: 1024
     },
-    render: {
+    /*render: {
         pixelArt: true,
         antialias: true
-    },
+    },*/
     scene: {
         preload: preload,
         create: create
