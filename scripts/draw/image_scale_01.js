@@ -7,10 +7,10 @@ var config = {
         width: 1024,
         height: 1024
     },
-    /*render: {
-        pixelArt: true,
-        antialias: true
-    },*/
+    //render: {
+    //    pixelArt: true,
+    //    antialias: true
+    //},
     scene: {
         preload: preload,
         create: create
