@@ -17,7 +17,8 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('pic', 'assets/images/Eva hraje na kytaru.png');
+    var assets_path = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets/images"
+    this.load.image('pic', assets_path + '/Eva hraje na kytaru.png');
 }
 
 function create ()
