@@ -23,9 +23,9 @@ function preload ()
 
 function create ()
 {
-    var img1 = this.add.image(0, 0, 'pic').setOrigin(0);
-    var img2 = this.add.image(0, 600, 'pic').setOrigin(0);
-    var img3 = this.add.image(0, 900, 'pic').setOrigin(0);
+    var img1 = this.add.image(100, 0, 'pic').setOrigin(0);
+    var img2 = this.add.image(100, 600, 'pic').setOrigin(0);
+    var img3 = this.add.image(100, 900, 'pic').setOrigin(0);
     img2.setScale(.5, .5);
     img3.setScale(.2, .2);
 
