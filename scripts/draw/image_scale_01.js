@@ -41,6 +41,57 @@ function create ()
 
 
 /**
+https://rexrainbow.github.io/phaser3-rex-notes/docs/site/scalemanager/
+
+------------------
+Full screen
+------------------
+Under 'pointerup' touch event :
+
+Start full screen
+
+scene.scale.startFullscreen();
+Stop full screen
+
+scene.scale.stopFullscreen();
+Toggle full screen
+
+scene.scale.toggleFullscreen();
+Is full screen
+
+var isFullscreen = scene.scale.isFullscreen;
+
+------------------
+Enter full screen
+------------------
+scene.scale.on('enterfullscreen', function() {}, scope);
+Enter full screen failed
+
+scene.scale.on('fullscreenfailed', function(error) {}, scope);
+Leave full screen
+
+scene.scale.on('leavefullscreen', function() {}, scope);
+Full screen unsupport
+
+scene.scale.on('fullscreenunsupported', function() {}, scope);
+Leave full screen
+
+scene.scale.on('leavefullscreen', function() {}, scope);
+
+------------------
+Orientation
+------------------
+scene.scale.on('orientationchange', function(orientation) {
+    if (orientation === Phaser.Scale.PORTRAIT) {
+
+    } else if (orientation === Phaser.Scale.LANDSCAPE) {
+
+    }
+}, scope);
+
+------------------
+Setup
+------------------
  * @typedef {object} Phaser.Types.Core.RenderConfig
  * @since 3.0.0
  *
