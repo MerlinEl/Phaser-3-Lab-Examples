@@ -17,7 +17,7 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('pic', 'assets/pics/zero-two.png');
+    this.load.image('pic', 'assets/images/Eva hraje na kytaru.png');
 }
 
 function create ()
