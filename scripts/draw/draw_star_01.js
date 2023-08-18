@@ -1,10 +1,13 @@
 class SimpleStar extends Phaser.Scene {
     
     create() {
-        var g = this.make.graphics({x: 0, y: 0, add: false});
+        /*var g = this.make.graphics({x: 0, y: 0, add: false});
         this.drawStar(g, {x:105, y:105},  5, 100, 50, 0xFFFF00, 0xFF0000, 5);
         g.generateTexture('starGraphics', 210, 210);
-        var image = this.add.image(400, 300, 'starGraphics');
+        var image = this.add.image(400, 300, 'starGraphics');*/
+
+        var g = this.add.graphics({x: 800/2, y: 600/2});
+        this.drawStar(g, {x:0, y:0},  5, 100, 50, 0xFFFF00, 0xFF0000, 5);
     }
 
     drawStar (g, center, spikes, outerRadius, innerRadius, fillColor, lineColor, lineWidth) {
