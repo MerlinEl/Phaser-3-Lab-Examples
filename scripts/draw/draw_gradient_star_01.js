@@ -28,13 +28,11 @@ class GradientStar extends Phaser.Scene {
     constructor () {super(); }
     preload () {}
     create() {
-        var g = this.make.graphics({x: 0, y: 0, add: false});
-        this.drawStar(g, new Point2D(105, 105),  5, 100, 50, 0xFFFF00, 0xFF0000);
-        g.generateTexture('starGraphics', 210, 210);
-        var image = this.add.image(400, 300, 'starGraphics');
+        var g = this.add.graphics({x: 800/2, y: 600/2});
+        this.drawGradientStar(g, new Point2D(),  5, 100, 50, 0xFFFF00, 0xFF0000);
     }
 
-    drawStar (g, center, spikes, outerRadius, innerRadius, inner_color, outer_color) {
+    drawGradientStar (g, center, spikes, outerRadius, innerRadius, inner_color, outer_color) {
         var a = (Math.PI / 2) * 3;
         var x = center.x;
         var y = center.y;
