@@ -5,7 +5,7 @@ class GradientStar extends Phaser.Scene {
         this.load.script('Matrix2D', 'https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/geometry/Matrix2D.js');
     }
     create() {
-        var g = this.add.graphics({x: 800/2, y: 600/2});
+        var g = this.add.graphics(new Point2D(800/2, 600/2));
         this.drawGradientStar(g, new Point2D(),  5, 100, 50, 0xFFFF00, 0xFF0000);
     }
 
