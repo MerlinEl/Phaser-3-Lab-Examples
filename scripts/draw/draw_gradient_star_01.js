@@ -1,31 +1,9 @@
-class Point2D {
-    x = 0;
-    y = 0;
-    constructor(x, y) {
-        this.x = x || 0;
-        this.y = y || 0;
-    }
-    toString() {
-        return "Point2D( x:" + this.x + ", y:" + this.y + ")";
-    }
-}
-
-class Triangle2D {
-    p1; p2; p3;
-    constructor(p1, p2, p3) {
-        this.p1 = p1 || new Point2D();
-        this.p2 = p2 || new Point2D();
-        this.p3 = p3 || new Point2D();
-    }
-    toString() {
-        return "Triangle2D(\n\tp1:" + this.p1 + ",\n\tp2:" + this.p2 + ",\n\tp3:" + this.p3 + ")";
-    }
-}
-
 class GradientStar extends Phaser.Scene {
     
     constructor () {super(); }
-    //preload () {this.load.script('Matrix2D', 'geometry/Matrix2D.js');}
+    preload () {
+        this.load.script('Matrix2D', 'https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/geometry/Matrix2D.js');
+    }
     create() {
         var g = this.add.graphics({x: 800/2, y: 600/2});
         this.drawGradientStar(g, new Point2D(),  5, 100, 50, 0xFFFF00, 0xFF0000);
