@@ -22,7 +22,7 @@ class Triangle2D {
     p1;
     p2;
     p3;
-    constructor(p1, p2, p3, p4) {
+    constructor(p1, p2, p3) {
         this.p1 = p1 || new Point2D();
         this.p2 = p2 || new Point2D();
         this.p3 = p3 || new Point2D();
@@ -42,7 +42,7 @@ class Trapezoid2D {
     p2;
     p3;
     p4;
-    constructor(p1, p2, p3) {
+    constructor(p1, p2, p3, p4) {
         this.p1 = p1 || new Point2D();
         this.p2 = p2 || new Point2D();
         this.p3 = p3 || new Point2D();
