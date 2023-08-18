@@ -3,9 +3,9 @@
  * @author MerlinEl + Great Help From Internet 2023
  */
 // *************************************************************** //
-var Painter = {};
+var Painter2D = {};
 // *************************************************************** //
-Painter.drawStarDonut = function (g, center, out_r1, in_r1, out_r2, in_r2, inner_color, outer_color, spikes) {
+Painter2D.drawStarDonut = function (g, center, out_r1, in_r1, out_r2, in_r2, inner_color, outer_color, spikes) {
     console.log("drawStarDonut >\n\tout_r1:", out_r1, "\n\tin_r1:", in_r1, "\n\tout_r2:", out_r2, "\n\tin_r2:", in_r2, "center:", center);
     var a = (Math.PI / 2) * 3; // - Orien.degToRad(angle_offset);
     var step = Math.PI / spikes;
@@ -52,7 +52,7 @@ Painter.drawStarDonut = function (g, center, out_r1, in_r1, out_r2, in_r2, inner
     });
 };
 
-Painter.drawGradientStar = function (g, center, outerRadius, innerRadius, inner_color, outer_color, spikes) {
+Painter2D.drawGradientStar = function (g, center, outerRadius, innerRadius, inner_color, outer_color, spikes) {
     console.log("drawGradientStar >\n\tout_r1:", outerRadius, "\n\tin_r1:", innerRadius, "center:", center);
     var a = (Math.PI / 2) * 3; // start angle
     var step = Math.PI / spikes; // step angle
@@ -85,14 +85,14 @@ Painter.drawGradientStar = function (g, center, outerRadius, innerRadius, inner_
     });
 };
 
-Painter.drawStarRadialGradient = function (g, outerRadius, innerRadius, colors, positions, points_count) {
+Painter2D.drawStarRadialGradient = function (g, outerRadius, innerRadius, colors, positions, points_count) {
     if (colors.length != positions.length || colors.length < 2) return;
     var center = new Point2D(outerRadius, outerRadius);
     colors = colors.reverse();
     // first > draw first layer
     var out_r1 = outerRadius * positions[1];
     var in_r1 = innerRadius * positions[1];
-    Painter.drawGradientStar(g, center, out_r1, in_r1, colors[0], colors[1], points_count);
+    Painter2D.drawGradientStar(g, center, out_r1, in_r1, colors[0], colors[1], points_count);
     if (colors.length < 3) return; // if there is more than two colors
     // next > draw outer circle from trapezoids
     for (var i = 2; i < positions.length; i++) {
@@ -100,7 +100,7 @@ Painter.drawStarRadialGradient = function (g, outerRadius, innerRadius, colors, 
         var in_r2 = innerRadius * positions[i];
         var inner_color = colors[i - 1]; //0xff0000; //
         var outer_color = colors[i]; //0x0000ff; //
-        Painter.drawStarDonut(g, center, out_r1, in_r1, out_r2, in_r2, inner_color, outer_color, points_count);
+        Painter2D.drawStarDonut(g, center, out_r1, in_r1, out_r2, in_r2, inner_color, outer_color, points_count);
         out_r1 = out_r2; // shift end radius
         in_r1 = in_r2; // shift start radius
     }
