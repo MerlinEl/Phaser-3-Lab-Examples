@@ -87,7 +87,7 @@ Painter2D.drawGradientStar = function (g, center, outerRadius, innerRadius, inne
 
 Painter2D.drawStarRadialGradient = function (g, outerRadius, innerRadius, colors, positions, points_count) {
     if (colors.length != positions.length || colors.length < 2) return;
-    var center = new Point2D(outerRadius, outerRadius);
+    var center = new Point2D();
     colors = colors.reverse();
     // first > draw first layer
     var out_r1 = outerRadius * positions[1];
