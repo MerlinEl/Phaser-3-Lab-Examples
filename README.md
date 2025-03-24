@@ -13,3 +13,4 @@ Example | Category | Date
 *[Draw Star](https://labs.phaser.io/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/draw_star_01.js?123)* | `Draw` | *18.08.2023*
 *[Draw Gradient Star 2C](https://labs.phaser.io/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/draw_gradient_star_01.js?123)* | `Draw` | *18.08.2023*
 *[Draw Gradient Star 3C](https://labs.phaser.io/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/draw_gradient_star_02.js?123)* | `Draw` | *18.08.2023*
+*[Offset Image Pivot At Place](https://labs.phaser.io/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/offset_image_pivot_at_place.js?123)* | `Draw` | *24.03.2025*
