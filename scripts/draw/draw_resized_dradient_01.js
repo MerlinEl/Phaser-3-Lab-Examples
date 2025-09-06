@@ -1,7 +1,7 @@
 //https://phaser.io/phaser3/devlog/128
 //https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Graphics.html
 var config = {
-    type: Phaser.AUTO,
+    type: Phaser.AUTO, //type: Phaser.WEBGL,
     width: 800,
     height: 600,
     backgroundColor: "#2d2d2d",
@@ -13,6 +13,8 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+var temp_gra;
+var scene_center;
 const degToRad = (deg) => (deg * Math.PI) / 180;
 class Point2D {
     constructor(x = 0, y = 0) {
@@ -41,10 +43,205 @@ class Rectangle2D {
     }
 }
 function create() {
-    // 1. Create a Sprite with rotated gradient
-    createRotatedGradient(this, 200, 200, 200, 100, 45);
+    // create temp graphics for visualization
+    temp_gra = this.add.graphics().lineStyle(5, 0xffffff, 1.0);
+    // g.defaultFillAlpha = 0.3;
+    // g.defaultFillColor = 0xFFFFFF;
+    // g.fillRect(0, 0, 32, 20);
+    scene_center = new Point2D(this.renderer.projectionWidth / 2, this.renderer.projectionHeight / 2);
+    // 1. Create a Sprite Image with rotated gradient
+    var image = createRotatedGradient(this, 400, 300, 300, 200, 45);
+    // 2. mask image with rounded rectangle
+    var shape = maskImageGradient(image, 0, { tl: 20, tr: 20, bl: 20, br: 20 });
+    // move mask by mouse move
+    this.input.on("pointermove", function (pointer) {
+        shape.x = pointer.x - 140;
+        shape.y = pointer.y - 140;
+    });
+    // add mouse click event to change sprite size and redraw gradient
+    this.input.on("pointerdown", function (pointer) {
+        // setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600));
+        setGradientAngle(image, Phaser.Math.Between(0, 360));
+        // drawImageRect(image);
+    });
+}
+function maskImageGradient__(image, angle, corners) {
+    var x = 0;
+    var y = 0;
+    var w = image.width;
+    var h = image.height;
+    var scene = image.scene;
+
+    // 1. Create Graphics Object for the Mask
+    var g = scene.make.graphics({ add: false });
+
+    // 2. Define the Shape of the Mask (Rounded Rectangle)
+    g.fillStyle(0xffffff, 1); // White is important for the mask
+    g.beginPath();
+    g.moveTo(x + corners.tl, y);
+    g.lineTo(x + w - corners.tr, y);
+    if (corners.tr != 0) {
+        g.arc(x + w - corners.tr, y + corners.tr, corners.tr, degToRad(270), degToRad(360));
+    }
+    g.lineTo(x + w, y + h - corners.br);
+    if (corners.br != 0) {
+        g.arc(x + w - corners.br, y + h - corners.br, corners.br, degToRad(0), degToRad(90));
+    }
+    g.lineTo(x + corners.bl, y + h);
+    if (corners.bl != 0) {
+        g.arc(x + corners.bl, y + h - corners.bl, corners.bl, degToRad(90), degToRad(180));
+    }
+    g.lineTo(x, y + corners.tl);
+    if (corners.tl != 0) {
+        g.arc(x + corners.tl, y + corners.tl, corners.tl, degToRad(180), degToRad(270));
+    }
+    g.closePath();
+    g.fillPath();
+
+    // 3. Generate a Texture from the Graphics Object
+    const maskTexture = scene.textures.createCanvas("maskTexture", w, h);
+    var t = g.generateTexture("temp_texture", w, h);
+    console.log("g:", g, "texture:", t);
+    //maskTexture.getContext("2d").drawTexture(g,0,0);
+
+    //  4. Create a Geometry Mask
+    const geometryMask = new Phaser.Display.Masks.GeometryMask(this.scene, g);
+
+    //   Enable a new image with filter
+    image.enableFilters();
+    image.filters.addFilter(geometryMask);
+
+    // 5. (Important!) Add the Graphics object to the scene
+    scene.add.existing(g);
+
+    // 6. Set a Name
+    g.setName("maskGraphics");
 }
 
+function maskImageGradient(image, angle, corners) {
+    var x = 0;
+    var y = 0;
+    var w = image.width;
+    var h = image.height;
+    var scene = image.scene;
+
+    // 1. Create Graphics Object for the Mask
+    var g = scene.make.graphics({ add: false }).fillStyle(0x000000, 1);
+    //g.setOrigin(.5, .5).setDisplaySize(w, h);
+    var offset = new Point2D(w * image.originX, h * image.originY);
+    g.translateCanvas(-offset.x, -offset.y);
+    g.setPosition(x, y);
+    g.angle = angle;
+
+    // 2. Define the Shape of the Mask (Rounded Rectangle)
+    g.beginPath();
+    g.moveTo(x + corners.tl, y);
+    g.lineTo(x + w - corners.tr, y);
+    if (corners.tr != 0) {
+        g.arc(x + w - corners.tr, y + corners.tr, corners.tr, degToRad(270), degToRad(360));
+    }
+    g.lineTo(x + w, y + h - corners.br);
+    if (corners.br != 0) {
+        g.arc(x + w - corners.br, y + h - corners.br, corners.br, degToRad(0), degToRad(90));
+    }
+    g.lineTo(x + corners.bl, y + h);
+    if (corners.bl != 0) {
+        g.arc(x + corners.bl, y + h - corners.bl, corners.bl, degToRad(90), degToRad(180));
+    }
+    g.lineTo(x, y + corners.tl);
+    if (corners.tl != 0) {
+        g.arc(x + corners.tl, y + corners.tl, corners.tl, degToRad(180), degToRad(270));
+    }
+    g.closePath();
+    g.fillPath();
+
+    // 3. Create a Geometry Mask
+    const mask = g.createGeometryMask();
+
+    // 4. Apply the Mask to the Image
+    console.log("img:", image);
+    image.texture.refresh();
+    image.setMask(mask);
+
+    // 5. Posunout masku
+    //var offset = new Point2D(w * image.originX, h * image.originY);
+    //g.setPosition(image.x - offset.x, image.y - offset.y);
+    g.x = image.x;
+    g.y = image.y;
+    // 6. Set a Name
+    // g.setName('maskGraphics');
+    return g;
+}
+function setGradientAngle(image, gradientAngle) {
+    if (gradientAngle == 0) return;
+
+    // Redraw sprite gradient
+    var texture = image.texture; // CanvasTexture
+    var w = texture.width;
+    var h = texture.height;
+    var p1 = new Point2D();
+    var p2 = new Point2D(w, 0); // Initial horizontal gradient
+    var pos = new Point2D();
+    const center = new Point2D(w / 2, h / 2);
+    const textureKey = image.key;
+    const radAngle = degToRad(gradientAngle);
+    var ctx = image.texture.getContext("2d", { willReadFrequently: true }); //CanvasRenderingContext2D
+    // console.log("setSpriteSize >\n\timage:", image,
+    //     "\n\ttexture:", image.texture,
+    //     "\n\tctx:", ctx,
+    //     "\n\tgradientAngle:", gradientAngle
+    // );
+
+    //Look here
+    // With this nothing changes visually
+    ctx.clearRect(0, 0, w, h);
+    // With this is cleared rotated rectangle
+    texture.clear();
+
+    // Important: Save the context state!
+    ctx.save(); // Add this to save the initial state
+    // 1. Rotate the canvas *around its center*
+    ctx.translate(center.x, center.y);
+    ctx.rotate(radAngle);
+    ctx.translate(-center.x, -center.y);
+
+    // Get maximum bounds of a rotated rectangle
+    var bb = new Rectangle2D(0, 0, w, h);
+    var rotatedBB = getRotatedRectangleBounds(bb, center, gradientAngle);
+    w = rotatedBB.w;
+    h = rotatedBB.h;
+    pos.x = rotatedBB.x;
+    pos.y = rotatedBB.y;
+
+    //Calculate gradient
+    const gradient = ctx.createLinearGradient(0, 0, w, 0);
+    gradient.addColorStop(0, "#ff0000");
+    gradient.addColorStop(0.5, "#00ff00");
+    gradient.addColorStop(1, "#0000ff");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(pos.x, pos.y, w, h);
+    texture.refresh();
+
+    // Restore the context state! Crucial!
+    ctx.restore();
+}
+function setImageSize(image, w, h) {
+    console.log("setSpriteSize > image:", image, "w:", w, "h:", h);
+    image.setSize(w, h);
+    image.setDisplaySize(w, h);
+    // center image to scene
+    var scene = image.scene;
+    image.setPosition(scene_center.x, scene_center.y);
+}
+function drawImageRect(image) {
+    var rect = new Rectangle2D(image.x - image.width / 2, image.y - image.height / 2, image.width, image.height);
+    temp_gra.clear();
+    temp_gra.strokeRectShape(rect);
+    // temp_gra.translateCanvas(center.x, center.y)
+    // temp_gra.rotateCanvas(radAngle);
+    // temp_gra.translateCanvas(-center.x, -center.y);
+}
 function createRotatedGradient(scene, x, y, width, height, gradientAngle) {
     // 2. Vytvoření dočasného, standardního HTML canvas elementu.
     const tempCanvas = document.createElement("canvas");
@@ -60,7 +257,10 @@ function createRotatedGradient(scene, x, y, width, height, gradientAngle) {
     const center = new Point2D(w / 2, h / 2);
     const textureKey = "gradientTexture_" + new Date().getTime();
     const radAngle = degToRad(gradientAngle);
-    const ctx = tempCanvas.getContext("2d");
+    const ctx = tempCanvas.getContext("2d", { willReadFrequently: true });
+
+    // Important: Save the context state!
+    ctx.save(); // Add this to save the initial state
 
     // 5. Nakreslení orotovaného gradientu na dočasný canvas.
     if (gradientAngle != 0) {
@@ -106,35 +306,57 @@ function createRotatedGradient(scene, x, y, width, height, gradientAngle) {
 }
 
 /**
- * Rotate bounds around point.
- * @param {Rectangle2D} rect unrotated rectangle
- * @param {Number} pivot rotation point
- * @param {Number} angle in degrees
- * @returns Rotated resized bounding box
+ * Gets the axis-aligned bounding box (AABB) of a rotated rectangle.
+ *
+ * @param {Rectangle2D} rect - The original, unrotated rectangle.
+ * @param {Point2D} pivot - The point to rotate around.
+ * @param {number} angle - The angle of rotation in degrees.
+ * @returns {Rectangle2D} A new Rectangle2D object representing the bounding box of the rotated rectangle.
  */
 function getRotatedRectangleBounds(rect, pivot, angle) {
-    // Když je rotace větší než 360 stupňů nebo v záporných hodnotách
-    const normalizedAngle = ((angle % 360) + 360) % 360;
-    if (normalizedAngle == 0) {
-        return rect;
-    } else {
-        // Vytvoř 4 vertexy z rohů obdélníku, který nemá rotaci
-        var vertices = [new Point2D(rect.x, rect.y), new Point2D(rect.width, rect.y), new Point2D(rect.width, rect.height), new Point2D(rect.x, rect.height)];
-        // Orotuj vertexy kolem pivotu
-        var points = rotateVertices(angle, vertices, pivot);
-        // Vypočítej velikost orotovaného obdélníku
-        var min = points[0].clone();
-        var max = points[0].clone();
-        points.forEach((p) => {
-            // get min
-            if (p.x < min.x) min.x = p.x;
-            if (p.y < min.y) min.y = p.y;
-            // get max
-            if (p.x > max.x) max.x = p.x;
-            if (p.y > max.y) max.y = p.y;
-        });
-        return new Rectangle2D(min.x, min.y, max.x - min.x, max.y - min.y);
-    }
+    // 1. Calculate the vertices of the unrotated rectangle
+    const vertices = [
+        new Point2D(rect.x, rect.y), // Top-left
+        new Point2D(rect.x + rect.width, rect.y), // Top-right
+        new Point2D(rect.x + rect.width, rect.y + rect.height), // Bottom-right
+        new Point2D(rect.x, rect.y + rect.height), // Bottom-left
+    ];
+
+    // console.log("getRotatedRectangleBounds:", {
+    //     rect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+    //     pivot: { x: pivot.x, y: pivot.y },
+    //     angle: angle,
+    //     vertices: vertices,
+    // });
+
+    // 2. Rotate each vertex around the pivot
+    const rotatedVertices = vertices.map((vertex) => rotatePointAround(vertex, pivot, angle));
+
+    // console.log("getRotatedRectangleBounds: rotatedVertices", rotatedVertices);
+
+    // 3. Find the minimum and maximum x and y values of the rotated vertices
+    let minX = rotatedVertices[0].x;
+    let minY = rotatedVertices[0].y;
+    let maxX = rotatedVertices[0].x;
+    let maxY = rotatedVertices[0].y;
+
+    rotatedVertices.forEach((vertex) => {
+        // console.log("vertex:", vertex, minX, minY, maxX, maxY);
+        minX = Math.min(minX, vertex.x);
+        minY = Math.min(minY, vertex.y);
+        maxX = Math.max(maxX, vertex.x);
+        maxY = Math.max(maxY, vertex.y);
+    });
+
+    // console.log("getRotatedRectangleBounds: minX", minX, "minY", minY, "maxX", maxX, "maxY", maxY);
+
+    // 4. Construct the bounding box from the min and max values
+    const rotatedWidth = maxX - minX;
+    const rotatedHeight = maxY - minY;
+
+    // console.log("getRotatedRectangleBounds: rotatedWidth", rotatedWidth, "rotatedHeight", rotatedHeight);
+
+    return new Rectangle2D(minX, minY, rotatedWidth, rotatedHeight);
 }
 /**
  * Rotate Vertices around Point.
@@ -153,26 +375,56 @@ function rotateVertices(angle, vertices, pivot) {
     return rotatedVertices;
 }
 /**
- * Rotate point around pivot
- * @author Gemini 2025
+ * Rotate a point around a pivot.
+ *
+ * @param {Point2D} point - The point to rotate.
+ * @param {Point2D} pivot - The point to rotate around.
+ * @param {number} angle - The angle of rotation in degrees.
+ * @returns {Point2D} A new Point2D object representing the rotated point.
  */
 function rotatePointAround(point, pivot, angle) {
-    var a = degToRad(angle);
-    var s = Math.sin(a);
-    var c = Math.cos(a);
+    // Convert angle to radians
+    const angleInRadians = degToRad(angle);
+    const sine = Math.sin(angleInRadians);
+    const cosine = Math.cos(angleInRadians);
 
-    // Přesuneme vrchol do souřadnicového systému
-    point.x -= pivot.x;
-    point.y -= pivot.y;
+    // Translate point to origin (pivot becomes the new origin)
+    const translatedX = point.x - pivot.x;
+    const translatedY = point.y - pivot.y;
 
-    // Aplikujeme rotaci
-    var new_x = point.x * c - point.y * s;
-    var new_y = point.x * s + point.y * c;
+    // Perform rotation
+    const newX = translatedX * cosine - translatedY * sine;
+    const newY = translatedX * sine + translatedY * cosine;
 
-    // Vrátíme vrchol zpět a vrátíme nově rotovaný bod
-    point.x = new_x + pivot.x;
-    point.y = new_y + pivot.y;
+    // Translate back to original position
+    const rotatedX = newX + pivot.x;
+    const rotatedY = newY + pivot.y;
 
-    return point;
+    // console.log("rotatePointAround:", {
+    //     point: { x: point.x, y: point.y },
+    //     pivot: { x: pivot.x, y: pivot.y },
+    //     angle: angle,
+    //     angleInRadians: angleInRadians,
+    //     sine: sine,
+    //     cosine: cosine,
+    //     translatedX: translatedX,
+    //     translatedY: translatedY,
+    //     newX: newX,
+    //     newY: newY,
+    //     rotatedX: rotatedX,
+    //     rotatedY: rotatedY,
+    // });
+
+    return new Point2D(rotatedX, rotatedY);
 }
 function update() {}
+
+/*
+const texture = this.textures.addDynamicTexture('maskedPic', 368, 290);
+console.log("texture:", texture)
+const pic = this.make.image({ key: 'pic', origin: { x: 0, y: 0 }, add: true });
+const maskImage = this.make.image({ key: 'mask', origin: { x: 0, y: 0 }, add: false });
+pic.enableFilters().filters.external.addMask(maskImage);
+texture.draw(pic).render();
+this.add.sprite(560, 300, 'maskedPic');
+*/
