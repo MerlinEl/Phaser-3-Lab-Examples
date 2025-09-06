@@ -54,68 +54,25 @@ function create() {
     // 2. mask image with rounded rectangle
     var shape = maskImageGradient(image, 0, { tl: 20, tr: 20, bl: 20, br: 20 });
     // move mask by mouse move
+    var enable_dragg_mask = false;
     this.input.on("pointermove", function (pointer) {
-        shape.x = pointer.x - 140;
-        shape.y = pointer.y - 140;
+        if (enable_dragg_mask) {
+            shape.x = pointer.x;
+            shape.y = pointer.y;
+        }
     });
     // add mouse click event to change sprite size and redraw gradient
     this.input.on("pointerdown", function (pointer) {
         // setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600));
         setGradientAngle(image, Phaser.Math.Between(0, 360));
         // drawImageRect(image);
+        enable_dragg_mask = true;
     });
-}
-function maskImageGradient__(image, angle, corners) {
-    var x = 0;
-    var y = 0;
-    var w = image.width;
-    var h = image.height;
-    var scene = image.scene;
-
-    // 1. Create Graphics Object for the Mask
-    var g = scene.make.graphics({ add: false });
-
-    // 2. Define the Shape of the Mask (Rounded Rectangle)
-    g.fillStyle(0xffffff, 1); // White is important for the mask
-    g.beginPath();
-    g.moveTo(x + corners.tl, y);
-    g.lineTo(x + w - corners.tr, y);
-    if (corners.tr != 0) {
-        g.arc(x + w - corners.tr, y + corners.tr, corners.tr, degToRad(270), degToRad(360));
-    }
-    g.lineTo(x + w, y + h - corners.br);
-    if (corners.br != 0) {
-        g.arc(x + w - corners.br, y + h - corners.br, corners.br, degToRad(0), degToRad(90));
-    }
-    g.lineTo(x + corners.bl, y + h);
-    if (corners.bl != 0) {
-        g.arc(x + corners.bl, y + h - corners.bl, corners.bl, degToRad(90), degToRad(180));
-    }
-    g.lineTo(x, y + corners.tl);
-    if (corners.tl != 0) {
-        g.arc(x + corners.tl, y + corners.tl, corners.tl, degToRad(180), degToRad(270));
-    }
-    g.closePath();
-    g.fillPath();
-
-    // 3. Generate a Texture from the Graphics Object
-    const maskTexture = scene.textures.createCanvas("maskTexture", w, h);
-    var t = g.generateTexture("temp_texture", w, h);
-    console.log("g:", g, "texture:", t);
-    //maskTexture.getContext("2d").drawTexture(g,0,0);
-
-    //  4. Create a Geometry Mask
-    const geometryMask = new Phaser.Display.Masks.GeometryMask(this.scene, g);
-
-    //   Enable a new image with filter
-    image.enableFilters();
-    image.filters.addFilter(geometryMask);
-
-    // 5. (Important!) Add the Graphics object to the scene
-    scene.add.existing(g);
-
-    // 6. Set a Name
-    g.setName("maskGraphics");
+    this.input.on("pointerup", function (pointer) {
+        if (enable_dragg_mask) {
+            enable_dragg_mask = false;
+        }
+    });
 }
 
 function maskImageGradient(image, angle, corners) {
@@ -125,15 +82,17 @@ function maskImageGradient(image, angle, corners) {
     var h = image.height;
     var scene = image.scene;
 
-    // 1. Create Graphics Object for the Mask
-    var g = scene.make.graphics({ add: false }).fillStyle(0x000000, 1);
-    //g.setOrigin(.5, .5).setDisplaySize(w, h);
+    // 1. Create Graphics Object for the Mask (do NOT add to scene yet)
+    var g = scene.make.graphics({ add: false });
+
+    // 2. Apply Transformation (before drawing!)
     var offset = new Point2D(w * image.originX, h * image.originY);
     g.translateCanvas(-offset.x, -offset.y);
-    g.setPosition(x, y);
+    g.setPosition(image.x, image.y);
     g.angle = angle;
 
-    // 2. Define the Shape of the Mask (Rounded Rectangle)
+    // 3. Define the Shape of the Mask (Rounded Rectangle)
+    g.fillStyle(0xffffff, 1);
     g.beginPath();
     g.moveTo(x + corners.tl, y);
     g.lineTo(x + w - corners.tr, y);
@@ -155,21 +114,14 @@ function maskImageGradient(image, angle, corners) {
     g.closePath();
     g.fillPath();
 
-    // 3. Create a Geometry Mask
+    // 4. Create a Geometry Mask
     const mask = g.createGeometryMask();
 
-    // 4. Apply the Mask to the Image
-    console.log("img:", image);
-    image.texture.refresh();
+    // 5. Apply the Mask to the Image
     image.setMask(mask);
 
-    // 5. Posunout masku
-    //var offset = new Point2D(w * image.originX, h * image.originY);
-    //g.setPosition(image.x - offset.x, image.y - offset.y);
-    g.x = image.x;
-    g.y = image.y;
     // 6. Set a Name
-    // g.setName('maskGraphics');
+    g.setName("maskGraphics");
     return g;
 }
 function setGradientAngle(image, gradientAngle) {
