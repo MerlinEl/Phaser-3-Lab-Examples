@@ -69,9 +69,7 @@ function create() {
         enable_dragg_mask = true;
     });
     this.input.on("pointerup", function (pointer) {
-        if (enable_dragg_mask) {
-            enable_dragg_mask = false;
-        }
+        enable_dragg_mask = false;
     });
 }
 
