@@ -52,7 +52,8 @@ function create() {
     // 1. Create a Sprite Image with rotated gradient
     var image = createRotatedGradient(this, 400, 300, 300, 200, 45);
     // 2. mask image with rounded rectangle
-    var shape = maskImageGradient(image, 0, { tl: 20, tr: 20, bl: 20, br: 20 });
+    const corners = { tl: 20, tr: 20, bl: 20, br: 20 };
+    var shape = maskImageGradient(image, 0, corners);
     // move mask by mouse move
     var enable_dragg_mask = false;
     this.input.on("pointermove", function (pointer) {
@@ -63,13 +64,15 @@ function create() {
     });
     // add mouse click event to change sprite size and redraw gradient
     this.input.on("pointerdown", function (pointer) {
-        // setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600));
-        setGradientAngle(image, Phaser.Math.Between(0, 360));
+        setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600), corners);
+        //setGradientAngle(image, Phaser.Math.Between(0, 360));
         // drawImageRect(image);
-        enable_dragg_mask = true;
+        //enable_dragg_mask = true;
     });
     this.input.on("pointerup", function (pointer) {
-        enable_dragg_mask = false;
+        if (enable_dragg_mask) {
+            enable_dragg_mask = false;
+        }
     });
 }
 
@@ -121,6 +124,9 @@ function maskImageGradient(image, angle, corners) {
     // 6. Set a Name
     g.setName("maskGraphics");
     return g;
+}
+function updateImageMask(image, w, h, corners){
+    maskImageGradient(image, image.rotation, corners)
 }
 function setGradientAngle(image, gradientAngle) {
     if (gradientAngle == 0) return;
@@ -176,13 +182,14 @@ function setGradientAngle(image, gradientAngle) {
     // Restore the context state! Crucial!
     ctx.restore();
 }
-function setImageSize(image, w, h) {
+function setImageSize(image, w, h, corners) {
     console.log("setSpriteSize > image:", image, "w:", w, "h:", h);
     image.setSize(w, h);
     image.setDisplaySize(w, h);
     // center image to scene
     var scene = image.scene;
     image.setPosition(scene_center.x, scene_center.y);
+    updateImageMask(image, w, h, corners);
 }
 function drawImageRect(image) {
     var rect = new Rectangle2D(image.x - image.width / 2, image.y - image.height / 2, image.width, image.height);
