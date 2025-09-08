@@ -66,8 +66,8 @@ function create() {
     });
     // add mouse click event to change sprite size and redraw gradient
     this.input.on("pointerdown", function (pointer) {
-        setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600), corners);
-        //setGradientAngle(image, Phaser.Math.Between(0, 360));
+        //setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600), corners);
+        setGradientAngle(image, colors, positions, Phaser.Math.Between(0, 360));
         // drawImageRect(image);
         //enable_dragg_mask = true;
     });
@@ -130,7 +130,7 @@ function maskImageGradient(image, angle, corners) {
 function updateImageMask(image, w, h, corners) {
     maskImageGradient(image, image.rotation, corners);
 }
-function setGradientAngle(image, gradientAngle) {
+function setGradientAngle(image, colors, positions, gradientAngle) {
     if (gradientAngle == 0) return;
 
     // Redraw sprite gradient
