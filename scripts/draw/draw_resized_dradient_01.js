@@ -50,7 +50,9 @@ function create() {
     // g.fillRect(0, 0, 32, 20);
     scene_center = new Point2D(this.renderer.projectionWidth / 2, this.renderer.projectionHeight / 2);
     // 1. Create a Sprite Image with rotated gradient
-    var image = createRotatedGradient(this, 400, 300, 300, 200, 45);
+    const colors = ["#ff0000", "#00ff00", "#0000ff"];
+    const positions = [0, 0.5, 1];
+    var image = createRotatedGradient(this, 400, 300, 300, 200, colors, positions, 45);
     // 2. mask image with rounded rectangle
     const corners = { tl: 20, tr: 20, bl: 20, br: 20 };
     var shape = maskImageGradient(image, 0, corners);
@@ -125,8 +127,8 @@ function maskImageGradient(image, angle, corners) {
     g.setName("maskGraphics");
     return g;
 }
-function updateImageMask(image, w, h, corners){
-    maskImageGradient(image, image.rotation, corners)
+function updateImageMask(image, w, h, corners) {
+    maskImageGradient(image, image.rotation, corners);
 }
 function setGradientAngle(image, gradientAngle) {
     if (gradientAngle == 0) return;
@@ -139,24 +141,17 @@ function setGradientAngle(image, gradientAngle) {
     var p2 = new Point2D(w, 0); // Initial horizontal gradient
     var pos = new Point2D();
     const center = new Point2D(w / 2, h / 2);
-    const textureKey = image.key;
     const radAngle = degToRad(gradientAngle);
     var ctx = image.texture.getContext("2d", { willReadFrequently: true }); //CanvasRenderingContext2D
-    // console.log("setSpriteSize >\n\timage:", image,
-    //     "\n\ttexture:", image.texture,
-    //     "\n\tctx:", ctx,
-    //     "\n\tgradientAngle:", gradientAngle
-    // );
 
-    //Look here
     // With this nothing changes visually
     ctx.clearRect(0, 0, w, h);
     // With this is cleared rotated rectangle
     texture.clear();
 
     // Important: Save the context state!
-    ctx.save(); // Add this to save the initial state
-    // 1. Rotate the canvas *around its center*
+    ctx.save();
+    // Rotate the canvas *around its center*
     ctx.translate(center.x, center.y);
     ctx.rotate(radAngle);
     ctx.translate(-center.x, -center.y);
@@ -170,10 +165,11 @@ function setGradientAngle(image, gradientAngle) {
     pos.y = rotatedBB.y;
 
     //Calculate gradient
-    const gradient = ctx.createLinearGradient(0, 0, w, 0);
-    gradient.addColorStop(0, "#ff0000");
-    gradient.addColorStop(0.5, "#00ff00");
-    gradient.addColorStop(1, "#0000ff");
+    const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+    for (let i = 0; i < colors.length; i++) {
+        var clr = Phaser.Display.Color.HexStringToColor(colors[i]).rgba; //IntegerToColor
+        gradient.addColorStop(positions[i], clr);
+    }
 
     ctx.fillStyle = gradient;
     ctx.fillRect(pos.x, pos.y, w, h);
@@ -199,7 +195,15 @@ function drawImageRect(image) {
     // temp_gra.rotateCanvas(radAngle);
     // temp_gra.translateCanvas(-center.x, -center.y);
 }
-function createRotatedGradient(scene, x, y, width, height, gradientAngle) {
+/**
+ * Create Image with rotated gradient
+ */
+function createRotatedGradient(scene, x, y, width, height, colors, positions, gradientAngle) {
+    if (!colors || !positions || colors.length !== positions.length || colors.length === 0) {
+        console.error("Colors and positions arrays must be of the same length");
+        return;
+    }
+
     // 2. Vytvoření dočasného, standardního HTML canvas elementu.
     const tempCanvas = document.createElement("canvas");
     // 3. Nastavení velikosti canvas elementu
@@ -215,6 +219,10 @@ function createRotatedGradient(scene, x, y, width, height, gradientAngle) {
     const textureKey = "gradientTexture_" + new Date().getTime();
     const radAngle = degToRad(gradientAngle);
     const ctx = tempCanvas.getContext("2d", { willReadFrequently: true });
+
+    // with this does not work - maybe later
+    // const texture = scene.textures.createCanvas(textureKey, width, height);
+    // const ctx = texture.getSourceImage().getContext('2d', { willReadFrequently: true });
 
     // Important: Save the context state!
     ctx.save(); // Add this to save the initial state
@@ -246,9 +254,10 @@ function createRotatedGradient(scene, x, y, width, height, gradientAngle) {
 
     // Vytvoření lineárního gradientu z bodu p1 do bodu p2
     const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-    gradient.addColorStop(0, "#ff0000");
-    gradient.addColorStop(0.5, "#00ff00");
-    gradient.addColorStop(1, "#0000ff");
+    for (let i = 0; i < colors.length; i++) {
+        var clr = Phaser.Display.Color.HexStringToColor(colors[i]).rgba; //IntegerToColor
+        gradient.addColorStop(positions[i], clr);
+    }
 
     ctx.fillStyle = gradient;
     ctx.fillRect(pos.x, pos.y, w, h);
