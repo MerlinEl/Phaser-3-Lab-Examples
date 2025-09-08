@@ -14,6 +14,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 var temp_gra;
+var scene_size;
 var scene_center;
 const degToRad = (deg) => (deg * Math.PI) / 180;
 class Point2D {
@@ -23,6 +24,12 @@ class Point2D {
     }
     clone() {
         return new Point2D(this.x, this.y);
+    }
+}
+class Size2D {
+    constructor(w, h) {
+        this.width = this.w = w;
+        this.height = this.h = h;
     }
 }
 class Rectangle2D {
@@ -38,61 +45,195 @@ class Rectangle2D {
     get right() {
         return this.x + this.w;
     }
+    get bottom() {
+        return this.y + this.height;
+    }
     get min() {
         return new Point2D(this.x, this.y);
     }
 }
 function create() {
+    var scene = this;
+    scene_size = new Size2D(scene.renderer.projectionWidth, scene.renderer.projectionHeight);
     // create temp graphics for visualization
-    temp_gra = this.add.graphics().lineStyle(5, 0xffffff, 1.0);
+    temp_gra = scene.add.graphics().lineStyle(5, 0xffffff, 1.0);
+    drawGrid(temp_gra, scene_size.w, scene_size.h, 20, true, scene);
     // g.defaultFillAlpha = 0.3;
     // g.defaultFillColor = 0xFFFFFF;
     // g.fillRect(0, 0, 32, 20);
-    scene_center = new Point2D(this.renderer.projectionWidth / 2, this.renderer.projectionHeight / 2);
+    scene_center = new Point2D(scene_size.w / 2, scene_size.h / 2);
     // 1. Create a Sprite Image with rotated gradient
     const colors = ["#ff0000", "#00ff00", "#0000ff"];
     const positions = [0, 0.5, 1];
-    var image = createRotatedGradient(this, 400, 300, 300, 200, colors, positions, 45);
-    // 2. mask image with rounded rectangle
+    // 2.Create white texture for drawing with HTML5 API
+    var image = createAddCanvasTexture(scene, "sprite_01", 400, 300, 300, 200);
+    // 3. Draw linear gradient with random angle
+    drawLinearGradient(image, 300, 200, colors, positions, Phaser.Math.Between(0, 360));
+    //drawRectangleCntred(scene, new Size2D(image.width, image.height));
+    // 4. mask image with rounded rectangle
     const corners = { tl: 20, tr: 20, bl: 20, br: 20 };
-    var shape = maskImageGradient(image, 0, corners);
+    var shape = maskImageGradient(image, corners);
+    // 5. Add mouse events to test methods
     // move mask by mouse move
     var enable_dragg_mask = false;
-    this.input.on("pointermove", function (pointer) {
+    scene.input.on("pointermove", function (pointer) {
         if (enable_dragg_mask) {
             shape.x = pointer.x;
             shape.y = pointer.y;
         }
     });
     // add mouse click event to change sprite size and redraw gradient
-    this.input.on("pointerdown", function (pointer) {
-        //setImageSize(image, Phaser.Math.Between(100, 600), Phaser.Math.Between(100, 600), corners);
-        setGradientAngle(image, colors, positions, Phaser.Math.Between(0, 360));
-        // drawImageRect(image);
+    scene.input.on("pointerdown", function (pointer) {
+        // Set random each time user click
+        var w = Phaser.Math.Between(100, 600);
+        var h = Phaser.Math.Between(100, 600);
+        var a = Phaser.Math.Between(0, 360);
+        drawLinearGradient(image, w, h, colors, positions, a);
+        //drawRectangle(image, w, h);
+        // center image to scene
+        //image.setPosition(scene_center.x, scene_center.y);
+        updateImageMask(image, w, h, corners);
+        // debug will draw rectangle to check new image size
+        drawRectangleCntred(scene, new Size2D(image.width, image.height));
         //enable_dragg_mask = true;
     });
-    this.input.on("pointerup", function (pointer) {
+    scene.input.on("pointerup", function (pointer) {
         if (enable_dragg_mask) {
             enable_dragg_mask = false;
         }
     });
 }
+// Draw simple white rectangle on HTML5 Texture displayed in Phaser 3
+function drawRectangle(image, w, h) {
+    console.log("Image Size Before w:", image.width, "h:", image.height);
+    console.log("Texture Size Before w:", image.texture.width, "h:", image.texture.height);
+    console.log("Set Size w:", w, "h:", h);
 
-function maskImageGradient(image, angle, corners) {
+    image.setSize(w, h);
+    image.setDisplaySize(w, h);
+
+    var texture = image.texture; // CanvasTexture
+    var ctx = texture.getContext("2d", { willReadFrequently: true }); //CanvasRenderingContext2D
+    ctx.canvas.width = w;
+    ctx.canvas.height = h;
+
+    // Clear texture before drawing
+    ctx.clearRect(0, 0, w, h);
+    texture.clear();
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, w, h);
+
+    texture.refresh();
+
+    console.log("Image Size After w:", image.width, "h:", image.height);
+    console.log("Texture Size After w:", image.texture.width, "h:", image.texture.height);
+}
+/**
+ * Create white texture for drawing with HTML5 API and add it as Image to the scene.
+ * returns new Image
+ */
+function createAddCanvasTexture(scene, name, x, y, w, h) {
+    // 1. Vytvoření standardního HTML canvas elementu.
+    const tempCanvas = document.createElement("canvas");
+    // 2. Nastavení velikosti canvas elementu
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+    // 3. Vytvoření Phaser Textury z našeho dočasného canvasu.
+    const textureKey = "gradientTexture_" + name + "_" + new Date().getTime();
+    // 4. Fill white rectangle
+    const ctx = tempCanvas.getContext("2d", { willReadFrequently: true });
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, w, h);
+
+    scene.textures.addCanvas(textureKey, tempCanvas);
+    // 7. Vytvoření a umístění objektu Image, který zobrazí texturu.
+    return scene.add.image(x, y, textureKey);
+}
+function drawLinearGradient(image, w, h, colors, positions, gradientAngle) {
+    // Validate input parameters
+    if (!colors || !positions || colors.length !== positions.length || colors.length === 0) {
+        console.error("Colors and positions arrays must be of the same length");
+        return;
+    }
+    // If nothing changes return
+    if (image.gradientAngle == gradientAngle && image.width == w && image.height == h) return;
+    image.gradientAngle = gradientAngle;
+
+    // Redraw sprite gradient
+    var texture = image.texture; // CanvasTexture
+    var p1 = new Point2D();
+    var p2 = new Point2D(w, 0); // Initial horizontal gradient
+    var pos = new Point2D();
+    const center = new Point2D(w / 2, h / 2);
+    const radAngle = degToRad(gradientAngle);
+    var ctx = image.texture.getContext("2d", { willReadFrequently: true }); //CanvasRenderingContext2D
+
+    // Is the size was changed then update image size
+    if (image.width != w || image.height != h) {
+        image.setSize(w, h);
+        image.setDisplaySize(w, h);
+        // texture.width = w;
+        // texture.height = h;
+        ctx.canvas.width = w;
+        ctx.canvas.height = h;
+    }
+
+    // Clear texture before drawing
+    texture.clear();
+    // Important: Save the context state!
+    ctx.save();
+
+    // If gradient is rotated
+    if (gradientAngle != 0) {
+        // Rotate the canvas *around its center*
+        ctx.translate(center.x, center.y);
+        ctx.rotate(radAngle);
+        ctx.translate(-center.x, -center.y);
+
+        // Get maximum bounds of a rotated rectangle
+        var bb = new Rectangle2D(0, 0, w, h);
+        var rotatedBB = getRotatedRectangleBounds(bb, center, gradientAngle);
+        // Nastavení počáteční pozice vykreslování grarientu
+        pos.x = (w - rotatedBB.w) / 2;
+        pos.y = (h - rotatedBB.h) / 2;
+        // Nastavení velikosti gradientu tak, aby pokryl plochu otočeného obdéníku
+        w = rotatedBB.w;
+        h = rotatedBB.h;
+        // Nastavení bodů pro počátek a konec gradientu
+        p1 = rotatedBB.min;
+        p2 = new Point2D(rotatedBB.right, rotatedBB.y);
+    }
+
+    //Calculate gradient
+    const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+    for (let i = 0; i < colors.length; i++) {
+        var clr = Phaser.Display.Color.HexStringToColor(colors[i]).rgba;
+        gradient.addColorStop(positions[i], clr);
+    }
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(pos.x, pos.y, w, h);
+
+    texture.refresh();
+
+    // Restore the context state! Crucial!
+    ctx.restore();
+}
+function maskImageGradient(image, corners) {
     var x = 0;
     var y = 0;
     var w = image.width;
     var h = image.height;
     var scene = image.scene;
 
-    // 1. Create Graphics Object for the Mask (do NOT add to scene yet)
+    // 1. Create Graphics Object for the Mask (do NOT add to scene )
     var g = scene.make.graphics({ add: false });
 
     // 2. Apply Transformation (before drawing!)
     var offset = new Point2D(w * image.originX, h * image.originY);
     g.translateCanvas(-offset.x, -offset.y);
     g.setPosition(image.x, image.y);
-    g.angle = angle;
 
     // 3. Define the Shape of the Mask (Rounded Rectangle)
     g.fillStyle(0xffffff, 1);
@@ -127,148 +268,9 @@ function maskImageGradient(image, angle, corners) {
     g.setName("maskGraphics");
     return g;
 }
+//    g.setName("maskGraphics");
 function updateImageMask(image, w, h, corners) {
-    maskImageGradient(image, image.rotation, corners);
-}
-function setGradientAngle(image, colors, positions, gradientAngle) {
-    if (gradientAngle == 0) return;
-
-    // Redraw sprite gradient
-    var texture = image.texture; // CanvasTexture
-    var w = texture.width;
-    var h = texture.height;
-    var p1 = new Point2D();
-    var p2 = new Point2D(w, 0); // Initial horizontal gradient
-    var pos = new Point2D();
-    const center = new Point2D(w / 2, h / 2);
-    const radAngle = degToRad(gradientAngle);
-    var ctx = image.texture.getContext("2d", { willReadFrequently: true }); //CanvasRenderingContext2D
-
-    // With this nothing changes visually
-    ctx.clearRect(0, 0, w, h);
-    // With this is cleared rotated rectangle
-    texture.clear();
-
-    // Important: Save the context state!
-    ctx.save();
-    // Rotate the canvas *around its center*
-    ctx.translate(center.x, center.y);
-    ctx.rotate(radAngle);
-    ctx.translate(-center.x, -center.y);
-
-    // Get maximum bounds of a rotated rectangle
-    var bb = new Rectangle2D(0, 0, w, h);
-    var rotatedBB = getRotatedRectangleBounds(bb, center, gradientAngle);
-    w = rotatedBB.w;
-    h = rotatedBB.h;
-    pos.x = rotatedBB.x;
-    pos.y = rotatedBB.y;
-
-    //Calculate gradient
-    const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-    for (let i = 0; i < colors.length; i++) {
-        var clr = Phaser.Display.Color.HexStringToColor(colors[i]).rgba; //IntegerToColor
-        gradient.addColorStop(positions[i], clr);
-    }
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(pos.x, pos.y, w, h);
-    texture.refresh();
-
-    // Restore the context state! Crucial!
-    ctx.restore();
-}
-function setImageSize(image, w, h, corners) {
-    console.log("setSpriteSize > image:", image, "w:", w, "h:", h);
-    image.setSize(w, h);
-    image.setDisplaySize(w, h);
-    // center image to scene
-    var scene = image.scene;
-    image.setPosition(scene_center.x, scene_center.y);
-    updateImageMask(image, w, h, corners);
-}
-function drawImageRect(image) {
-    var rect = new Rectangle2D(image.x - image.width / 2, image.y - image.height / 2, image.width, image.height);
-    temp_gra.clear();
-    temp_gra.strokeRectShape(rect);
-    // temp_gra.translateCanvas(center.x, center.y)
-    // temp_gra.rotateCanvas(radAngle);
-    // temp_gra.translateCanvas(-center.x, -center.y);
-}
-/**
- * Create Image with rotated gradient
- */
-function createRotatedGradient(scene, x, y, width, height, colors, positions, gradientAngle) {
-    if (!colors || !positions || colors.length !== positions.length || colors.length === 0) {
-        console.error("Colors and positions arrays must be of the same length");
-        return;
-    }
-
-    // 2. Vytvoření dočasného, standardního HTML canvas elementu.
-    const tempCanvas = document.createElement("canvas");
-    // 3. Nastavení velikosti canvas elementu
-    tempCanvas.width = width;
-    tempCanvas.height = height;
-    // 4. Vytvoření proměnných pro přhlednější použití
-    var w = width;
-    var h = height;
-    var p1 = new Point2D();
-    var p2 = new Point2D(w, 0);
-    var pos = new Point2D();
-    const center = new Point2D(w / 2, h / 2);
-    const textureKey = "gradientTexture_" + new Date().getTime();
-    const radAngle = degToRad(gradientAngle);
-    const ctx = tempCanvas.getContext("2d", { willReadFrequently: true });
-
-    // with this does not work - maybe later
-    // const texture = scene.textures.createCanvas(textureKey, width, height);
-    // const ctx = texture.getSourceImage().getContext('2d', { willReadFrequently: true });
-
-    // Important: Save the context state!
-    ctx.save(); // Add this to save the initial state
-
-    // 5. Nakreslení orotovaného gradientu na dočasný canvas.
-    if (gradientAngle != 0) {
-        // Vycentrování canvas
-        ctx.translate(center.x, center.y);
-        // Otočení canvas
-        ctx.rotate(radAngle);
-        // Vrácení pozice canvas zpět
-        ctx.translate(-center.x, -center.y);
-
-        // Get maximum bounds of a rotated rectangle
-        var bb = new Rectangle2D(0, 0, w, h);
-        var rotatedBB = getRotatedRectangleBounds(bb, center, gradientAngle);
-        // Nastavení počáteční pozice vykreslování grarientu
-        pos.x = (w - rotatedBB.w) / 2;
-        pos.y = (h - rotatedBB.h) / 2;
-        // Nastavení velikosti gradientu tak, aby pokryl plochu otočeného obdéníku
-        w = rotatedBB.w;
-        h = rotatedBB.h;
-        // Nastavení bodů pro počátek a konec gradientu
-        p1 = rotatedBB.min;
-        p2 = new Point2D(rotatedBB.right, rotatedBB.y);
-    }
-
-    console.log("p1:", p1, "p2:", p2, "pos:", pos);
-
-    // Vytvoření lineárního gradientu z bodu p1 do bodu p2
-    const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-    for (let i = 0; i < colors.length; i++) {
-        var clr = Phaser.Display.Color.HexStringToColor(colors[i]).rgba; //IntegerToColor
-        gradient.addColorStop(positions[i], clr);
-    }
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(pos.x, pos.y, w, h);
-
-    ctx.restore();
-
-    // 6. Vytvoření Phaser Textury z našeho dočasného canvasu.
-    scene.textures.addCanvas(textureKey, tempCanvas);
-
-    // 7. Vytvoření a umístění objektu Image, který zobrazí texturu.
-    return scene.add.image(x, y, textureKey);
+    maskImageGradient(image, corners);
 }
 
 /**
@@ -383,14 +385,96 @@ function rotatePointAround(point, pivot, angle) {
 
     return new Point2D(rotatedX, rotatedY);
 }
-function update() {}
 
-/*
-const texture = this.textures.addDynamicTexture('maskedPic', 368, 290);
-console.log("texture:", texture)
-const pic = this.make.image({ key: 'pic', origin: { x: 0, y: 0 }, add: true });
-const maskImage = this.make.image({ key: 'mask', origin: { x: 0, y: 0 }, add: false });
-pic.enableFilters().filters.external.addMask(maskImage);
-texture.draw(pic).render();
-this.add.sprite(560, 300, 'maskedPic');
-*/
+function createRectSizeComponents(scene) {
+    scene.rectSizeGraphics = scene.add.graphics().lineStyle(5, 0x00ff00, 1.0);
+    scene.rectSizeWidthText = scene.add
+        .text(10, 10, `Width: 0`, {
+            fontSize: "12px",
+            color: "#ffffff",
+        })
+        .setOrigin(0, 0);
+    scene.rectSizeHeightText = scene.add
+        .text(10, 20, `Height: 0`, {
+            fontSize: "12px",
+            color: "#ffffff",
+        })
+        .setOrigin(0, 0);
+}
+
+/**
+ * Draws a centered rectangle on a Graphics object and displays its width and height.
+ *
+ * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to draw on.
+ * @param {object} sceneSize - An object with 'w' (width) and 'h' (height) properties representing the scene size.
+ * @param {object} rectangleSize - An object with 'w' (width) and 'h' (height) properties representing the rectangle size.
+ * @param {Phaser.Scene} scene - The Phaser scene to which the text objects will be added.
+ */
+function drawRectangleCntred(scene, rectangleSize) {
+    if (!scene.rectSizeGraphics) createRectSizeComponents(scene);
+
+    const sceneSize = new Size2D(scene.renderer.projectionWidth, scene.renderer.projectionHeight);
+    const centerX = (sceneSize.w - rectangleSize.w) / 2;
+    const centerY = (sceneSize.h - rectangleSize.h) / 2;
+    const rect = new Rectangle2D(centerX, centerY, rectangleSize.w, rectangleSize.h);
+
+    const graphics = scene.rectSizeGraphics;
+    graphics.clear();
+    graphics.lineStyle(2, 0x00ff00, 1);
+    graphics.strokeRectShape(rect);
+
+    // Text objects
+    scene.rectSizeWidthText.setText(`Width: ${rect.width}`);
+    scene.rectSizeWidthText.setPosition(rect.x, rect.y - 15);
+    scene.rectSizeHeightText.setText(`Height: ${rect.height}`);
+    scene.rectSizeHeightText.setPosition(rect.x, rect.bottom + 2);
+}
+
+/**
+ * Draws a grid on a Phaser Graphics object.
+ *
+ * @param {Phaser.GameObjects.Graphics} graphics - The Graphics object to draw on.
+ * @param {number} width - The width of the grid.
+ * @param {number} height - The height of the grid.
+ * @param {number} cellSize - The size of each cell in the grid.
+ * @param {boolean} [showText=false] - Whether to show text labels for the axes.
+ * @param {Phaser.Scene} [scene] - The scene to add text to.
+ */
+function drawGrid(graphics, width, height, cellSize, showText = false, scene = null) {
+    graphics.lineStyle(1, 0x999999, 0.5); // Grid line style
+
+    // Draw vertical lines
+    for (let x = 0; x <= width; x += cellSize) {
+        graphics.moveTo(x, 0);
+        graphics.lineTo(x, height);
+    }
+
+    // Draw horizontal lines
+    for (let y = 0; y <= height; y += cellSize) {
+        graphics.moveTo(0, y);
+        graphics.lineTo(width, y);
+    }
+
+    graphics.strokePath();
+
+    if (showText && scene) {
+        // Add text labels for x axis
+        for (let x = 0; x <= width; x += cellSize) {
+            const text = scene.add.text(x + 2, 2, String(x), {
+                fontSize: "8px",
+                color: "#ffffff",
+            });
+            text.setOrigin(0, 0);
+        }
+
+        // Add text labels for y axis
+        for (let y = 0; y <= height; y += cellSize) {
+            const text = scene.add.text(2, y + 2, String(y), {
+                fontSize: "8px",
+                color: "#ffffff",
+            });
+            text.setOrigin(0, 0);
+        }
+    }
+}
+function update() {}
