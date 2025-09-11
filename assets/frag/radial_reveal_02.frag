@@ -48,6 +48,7 @@ class RadialReveal extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
     get size(){
         return this._u_size;
     }
+    // set size
     set size(val){
         this._u_size = val;
     }
