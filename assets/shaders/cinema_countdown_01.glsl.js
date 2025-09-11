@@ -1,3 +1,9 @@
+---
+name: cinema_countdown
+type: fragment
+uniform.uRadius: { "type": "1f", "value": 0.2 }
+---
+
   precision mediump float;
 
   uniform sampler2D uMainTexture;
