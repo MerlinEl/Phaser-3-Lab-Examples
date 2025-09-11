@@ -7,8 +7,8 @@ class Example extends Phaser.Scene
 
     preload ()
     {
-        this.load.setBaseURL('https://cdn.phaserfiles.com/v355');
-        this.load.image('checker', 'assets/pics/checker.png');
+        this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
+        this.load.image('checker', 'images/checker.png');
     }
 
     create ()
