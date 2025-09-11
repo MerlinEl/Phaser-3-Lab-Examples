@@ -24,6 +24,7 @@ class CinemaCountdown extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
             }`,
         });
         this._u_radius = 0.5;
+        this._u_size = {width:100, height:100};
     }
     onPreRender() {
         this.set2f('uResolution', this._u_size.width, this._u_size.height);
