@@ -1,6 +1,6 @@
 // GLSL Shader code (radial_reveal.frag)
 // shader must be on same path
-class TintPipeline extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
+class RadialRevealFrag extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
     constructor(game) {
         super({
             game,
