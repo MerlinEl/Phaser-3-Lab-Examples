@@ -15,8 +15,8 @@ function preload ()
 {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
     this.load.glsl('wave', '/shaders/shader1.frag.js');
-    this.load.image('pic', '/pics/sao-sinon.png');
-    this.load.image('bg', '/pics/purple-dots.png');
+    this.load.image('pic', '/images/sao-sinon.png');
+    this.load.image('bg', '/images/purple-dots.png');
 }
 
 function create ()
