@@ -14,7 +14,7 @@ var game = new Phaser.Game(config);
 function preload ()
 {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
-    this.load.glsl('fireball', '/shaders/shader0.frag');
+    this.load.glsl('fireball', '/shaders/shader0.frag.js');
 }
 
 function create ()
