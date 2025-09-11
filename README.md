@@ -23,5 +23,6 @@ Phaser 3 Sandbox Examples
 | _[Change Shaders](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/change_shader_texture_01.js?123)_           | `Draw`      | _11.09.2025_ |
 | _[Shader As Mask](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/shader_as_mask_01.js?123)_           | `Draw`      | _11.09.2025_ |
 | _[Save Shader As Texture](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/save_shader_as_texture.js?123)_           | `Draw`      | _11.09.2025_ |
+| _[Shaders Bundle](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/shaders_bundle_01.js?123)_           | `Draw`      | _11.09.2025_ |
 | _[Shader Arcade Physics 01](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/arcade_physics.js?123)_           | `Draw`      | _11.09.2025_ |
 | _[Cinema_Countdown_01](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/anim/cinema_countdown_01.js?123)_           | `Draw`      | _11.09.2025_ |
