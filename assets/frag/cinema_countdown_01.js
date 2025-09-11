@@ -29,7 +29,7 @@ class CinemaCountdown extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
         this.set1f('uRadius', this._u_radius);
     }
     get radius() {
-        return this._color;
+        return this._u_radius;
     }
     set radius (val){
         this._u_radius = val;
