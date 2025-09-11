@@ -25,8 +25,10 @@ class RadialReveal extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
             }`,
         });
         this._u_radius = 0.5;
+        this._u_size = {width:100, height:100};
     }
     onPreRender() {
+        this.set2f('uResolution', this._u_size.width, this._u_size.height);
         this.set1f('uRadius', this._u_radius);
     }
     get radius() {
@@ -34,6 +36,11 @@ class RadialReveal extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
     }
     set radius (val){
         this._u_radius = val;
-        return this;
+    }
+    get size(){
+        return this._u_size;
+    }
+    set size(val){
+        this._u_size = val;
     }
 }
