@@ -20,4 +20,5 @@ Phaser 3 Sandbox Examples
 | _[Draw Resized Gradient 02](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/draw_resized_dradient_02.js?123)_           | `Draw`      | _06.09.2025_ |
 | _[Basic Testure Shader](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/basic_texture_shader.js?123)_           | `Draw`      | _11.09.2025_ |
 | _[Change Shaders](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/shaders/change_shader_texture_01.js?123)_           | `Draw`      | _11.09.2025_ |
+| _[Save Shader As Texture](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/anim/save_shader_as_texture.js?123)_           | `Draw`      | _11.09.2025_ |
 | _[Cinema_Countdown_01](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/anim/cinema_countdown_01.js?123)_           | `Draw`      | _11.09.2025_ |
