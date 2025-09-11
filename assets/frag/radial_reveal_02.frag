@@ -6,21 +6,29 @@ class RadialReveal extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
             game,
             fragShader: `
             precision mediump float;
-            uniform sampler2D uMainTexture; // Původní textura
-            uniform float uRadius;          // Poloměr kruhu
-            varying vec2 outTexCoord;      // Interpolované souřadnice textury
+            uniform sampler2D uMainTexture;
+            uniform float uRadius;
+            uniform vec2 uResolution;
+            
+            varying vec2 outTexCoord;
+            
             void main() {
-                vec2 center = vec2(0.5, 0.5); // Střed kruhu (normalizované souřadnice)
-                float distance = distance(outTexCoord, center); // Vzdálenost pixelu od středu
+                vec2 center = vec2(0.5, 0.5);
+                float aspectRatio = uResolution.x / uResolution.y;
+                vec2 aspectCorrectedCoord = vec2(outTexCoord.x, outTexCoord.y * aspectRatio);
+                float distance = distance(aspectCorrectedCoord, center);
             
-                vec4 color = texture2D(uMainTexture, outTexCoord); // Barva pixelu
+                vec4 color = texture2D(uMainTexture, outTexCoord);
             
-                if (distance > uRadius) {
-                    // Pokud je pixel mimo kruh, nastavíme průhlednost na 0
-                    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+                // 1. Aplikace radiálního odhalování
+                float alpha = smoothstep(uRadius - 0.05, uRadius + 0.05, distance); // Hladký přechod
+                // float alpha = (distance < uRadius) ? 1.0 : 0.0; // Původní ostrý přechod
+            
+                // 2. Oříznutí do kruhu
+                if (distance > 0.5) { // Ořízneme vše mimo kruh o poloměru 0.5
+                    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); // Průhledná barva
                 } else {
-                    // Jinak použijeme původní barvu
-                    gl_FragColor = color;
+                    gl_FragColor = vec4(color.rgb, color.a * alpha); // Použijeme původní barvu s upravenou průhledností
                 }
             }`,
         });
