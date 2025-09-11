@@ -3,7 +3,8 @@
   uniform sampler2D uMainTexture;
   uniform float uRadius;
   uniform vec2 resolution;
-  
+  uniform float uTime; // New uniform for time
+
   varying vec2 outTexCoord;
   void main() {
       vec2 center = vec2(0.5);
