@@ -15,7 +15,7 @@ Phaser 3 Sandbox Examples
 | _[Draw Gradient Star 2C](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/draw_gradient_star_01.js?123)_                 | `Draw`      | _18.08.2023_ |
 | _[Draw Gradient Star 3C](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/draw/draw_gradient_star_02.js?123)_                 | `Draw`      | _18.08.2023_ |
 | _[Offset Image Pivot At Place](https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scripts/geometry/offset_image_pivot_at_place.js?123)_ | `Draw`      | _24.03.2025_ |
-| _[Shaders](shaders_01.html)_ | `Draw`      | _24.03.2025_ |
+| _[Shaders](https://merlinel.github.io/Phaser-3-Lab-Examples/)_ | `Draw`      | _24.03.2025_ |
 
 
 <table>
