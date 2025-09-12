@@ -30,8 +30,8 @@ class TintImageShader_Scene extends Phaser.Scene {
 
     create() {
 
-        //  this.fromPipelineFile(this);
-        this.fromFrag(this);
+         this.fromPipelineFile(this);
+        // this.fromFrag(this);
         // this.tintBackground();
     }
 
@@ -72,6 +72,7 @@ class TintImageShader_Scene extends Phaser.Scene {
     fromFrag(scene){
         const pipeline = new Phaser.Renderer.WebGL.Pipelines.SinglePipeline({
             game: scene,
+            // renderer: scene.renderer,
             name: 'TintPipeline',
             fragSource:this.frag_tint,
             uniforms: {
@@ -86,17 +87,20 @@ class TintImageShader_Scene extends Phaser.Scene {
         });
 
         console.log("pipeline:", pipeline);
-        scene.renderer.pipelines.add("TintPipeline", pipeline);
+        //scene.renderer.pipelines.add("TintPipeline", pipeline);
 
         const img = scene.add.image(400, 300, "timer_bg_01");
-        img.setPipeline("TintPipeline");
-        //img.pipelineData = {color: 0xff0000, power: 0.1};
-        console.log("data:", img.pipeline);
+        const pp = scene.renderer.pipelines.get("TintPipeline");
+        img.setPipeline(pp);
+        img.pipelineData = {uTintColor: 0xff0000, uPower: 0.7};
+                console.log("img:", img, "shader:", img.pipeline.currentShader);
+    img.pipeline.currentShader.set1f("uPower", 0.7)
+    // img.pipeline.currentShader.createUniforms();
+        console.log("img:", img,);
 
-        var color = Phaser.Display.Color.HexStringToColor("#00ff00");
-        img.pipeline.set3f("uTintColor", color.redGL, color.greenGL, color.blueGL);
-        img.pipeline.set1f('uPower', 0.7);
-        //img.pipelineData.power = 0.7;
+        // var color = Phaser.Display.Color.HexStringToColor("#00ff00");
+        // img.pipeline.set3f("uTintColor", color.redGL, color.greenGL, color.blueGL);
+        // img.pipeline.set1f('uPower', 0.7);
 
     }
     // This is a working example when pipeline is loaded from a file.
@@ -116,7 +120,7 @@ class TintImageShader_Scene extends Phaser.Scene {
         // apply pipeline on image
         img.setPipeline(pp);
         // change pipeline parameters
-        img.pipelineData = {color: 0xff0000, power: 0.1};``
+        img.pipelineData = {color: 0xff0000, power: 0.1};
         console.log("data:", img.pipelineData);
 
         this.tweens.add({
