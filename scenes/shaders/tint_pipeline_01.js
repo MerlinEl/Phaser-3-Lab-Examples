@@ -103,6 +103,21 @@ class TintImageShader_Scene extends Phaser.Scene {
         // img.pipeline.set1f('uPower', 0.7);
 
     }
+    allInOne(scene){
+        var TintPipeline = new Phaser.Class({
+            Extends: Phaser.Renderer.WebGL.Pipelines.SinglePipeline,
+            initialize:
+            function TintPipeline (scene){
+                Phaser.Renderer.WebGL.Pipelines.SinglePipeline.call(this, {
+                    game: scene,
+                    renderer: scene.renderer,
+                    fragShader:this.frag_tint
+                });
+            } 
+        });
+        const img = scene.add.image(400, 300, "timer_bg_01");
+        img.setPipeline (TintPipeline);
+    }
     // This is a working example when pipeline is loaded from a file.
     fromPipelineFile(scene){
         // create new pipeline from script class
