@@ -20,7 +20,6 @@ void main( void ) {
     angle = mod(angle, 6.28318530718);
 
     // Vypočítáme animovanou hodnotu (progress)
-    // Tady můžete upravit rychlost a směr animace
     float progress = mod(time / 2.0, 1.0) * 6.28318530718;
 
     // Vytvoříme plný kruh
@@ -38,7 +37,8 @@ void main( void ) {
     // Vykreslíme jen tu část prstence, která odpovídá načítání
     float result = ring * loadingArc;
     
-    // Nakonec nastavíme barvu pixelu na základě výsledku
-    // Zelená barva pro načítání
-    gl_FragColor = vec4(vec3(0.0, 1.0, 0.0) * result, 1.0);
+    // Nyní to klíčové: nastavujeme alfa kanál
+    // Pokud je "result" 1.0, alfa bude také 1.0 (plně viditelná)
+    // Pokud je "result" 0.0, alfa bude také 0.0 (plně průhledná)
+    gl_FragColor = vec4(1.0, 1.0, 1.0, result);
 }
