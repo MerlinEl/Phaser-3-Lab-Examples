@@ -6,11 +6,13 @@ var config = {
     height: 600,
     scene: {
         preload: preload,
-        create: create
+        create: create,
+        update: update
     }
 };
 
 var game = new Phaser.Game(config);
+var loaderValue = 0; 
 
 function preload ()
 {
@@ -41,29 +43,28 @@ function run1(scene){
     scene.add.image(400, 300, 'myImage').setMask(mask);
 }
 function run2(scene){
-    var shader = scene.make.shader({
+    // pozadí
+    scene.add.image(400, 300, 'bg');
+
+    // vytvoření shaderu
+     var shader = scene.make.shader({
         key: 'radialMask',
         x: 400,
         y: 300,
         width: 800,
         height: 600,
-        add: false,
-        // přidej uniform:
-        uniforms: {
-            uProgress: { value: 0.5 }
-        }
+        add: false
     });
 
-    //  Make a Bitmap Mask from it
+    // uděláme z něj masku
     var mask = shader.createBitmapMask();
 
-    //  Apply the mask to this image
+    // aplikujeme na obrázek
     var image = scene.add.image(400, 300, 'myImage').setMask(mask);
-    
-    // například:
-    //image.pipeline.uniforms.uProgress.value = 0; // začíná od středu, nic neodkryté
-    // pak postupně odkrývej
-    //pipeline.uniforms.uProgress.value = 1; // plně odkrytý obrázek
+console.log("image:", image);
+    // nastavíme progress (0.0 - 1.0)
+    shader.setUniform('progress.value', 0.5);
+    this.shader=shader;
 }
 function run3(scene){
     this.radialPipeline = new Phaser.Renderer.WebGL.Pipelines.SinglePipeline({
@@ -107,4 +108,14 @@ function run3(scene){
 function create ()
 {
     run1(this);
+}
+function update(time, delta) {
+    // loaderValue roste od 0 do 100
+    loaderValue += delta * 0.02; // rychlost růstu
+    if (loaderValue > 100) loaderValue = 100;
+
+    // nastav progress do shaderu
+    if (this.shader) {
+        this.shader.setUniform('progress.value', loaderValue / 100);
+    }
 }
