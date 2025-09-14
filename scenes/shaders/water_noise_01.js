@@ -90,11 +90,7 @@ class Example extends Phaser.Scene {
     // this.setBackgrounsShader();
 
     // add shader on image
-    this.setImageShader()
-
-    // console.log("shader:", shader);
-    // const img = scene.add.image(400, 300, "timer_bg_01");
-    // // how to apply this shader on image?    
+    this.setImageShader() 
   }
   setBackgrounsShader(){
    const baseShader = new Phaser.Display.BaseShader(
