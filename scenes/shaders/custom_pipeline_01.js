@@ -58,9 +58,6 @@ var CustomPipeline = new Phaser.Class({
             }
             `,
             uniforms: [
-                'uProjectionMatrix',
-                'uViewMatrix',
-                'uModelMatrix',
                 'uMainSampler',
                 'uResolution',
                 'uTime'
