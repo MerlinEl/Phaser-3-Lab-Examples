@@ -82,22 +82,19 @@ class Example extends Phaser.Scene {
     this.load.image("noise", "/textures/noise_01.png");
     this.load.image("pic", "/images/dragon_bg_01.jpg");
     this.load.image("rocks", "/images/rocks_01.png");
-    this.load.image("timer_bg_01", "/images/timer_bg_01.png");
+    this.load.image("sinon", "/images/sao-sinon.png");
   }
 
   create() {
-    // add shader to background
-    // this.setBackgrounsShader();
-
-    // add shader on image
-    // this.setImageShader();
-    this.setImageShader2();
+    this.setShaderToBackground();
+    // this.setShaderToContainer();
+    //this.setShaderToImage();
 
     // console.log("shader:", shader);
-    // const img = scene.add.image(400, 300, "timer_bg_01");
+    // const img = scene.add.image(400, 300, "sinon");
     // // how to apply this shader on image?    
   }
-  setBackgrounsShader(){
+  setShaderToBackground(){
    const baseShader = new Phaser.Display.BaseShader(
       "BufferShader",
       fragmentShader
@@ -106,30 +103,21 @@ class Example extends Phaser.Scene {
       .shader(baseShader, 0, 0, 800, 600, ["noise", "pic", "rocks"])
       .setOrigin(0, 0);
   }
-  setImageShader(){
+  setShaderToContainer(){
     const baseShader = new Phaser.Display.BaseShader("BufferShader", fragmentShader);
     // Vytvoř kontejner pro obrázek, na který chceme aplikovat shader
     const container = this.add.container(400, 300);
+    container.setSize(100, 200);
     
-    // Vytvoř obrázek a přidej ho do kontejneru
-    // Pozor: Pozice obrázku je relativní ke kontejneru (0,0)
-    const img = this.add.image(0, 0, "timer_bg_01");
-    container.add(img);
-
     // Vytvoř instanci shaderu pro kontejner
-    const shader = this.add.shader(baseShader, 0, 0, 800, 600, ["noise", "pic", "rocks"]);
+    const shader = this.add.shader(baseShader, 0, 0, 800, 600, ["noise", "sinon", "rocks"]);
 
     // Aplikuj shader jako post-pipeline na kontejner
     container.setPostPipeline(shader);
 
-    // Poznámka: Aby shader fungoval, musíš mu předat správné textury (samplery).
-    // Ve tvém stávajícím kódu se texture2D používá s `iChannel1` pro background.
-    // Pro aplikaci na `timer_bg_01` bys musel upravit shader, aby přijímal správnou texturu
-    // a nechal ostatní textury (noise, rocks) jako uniformy.
-
     // Příklad, jak předat textury do shaderu:
     shader.setSampler2D('iChannel0', this.textures.get('noise').getSourceImage());
-    shader.setSampler2D('iChannel1', this.textures.get('timer_bg_01').getSourceImage());
+    shader.setSampler2D('iChannel1', this.textures.get('sinon').getSourceImage());
     shader.setSampler2D('iChannel2', this.textures.get('rocks').getSourceImage());
 
     // Pokud potřebuješ, můžeš nastavit i další uniformy, jako "time" a "resolution"
@@ -141,9 +129,9 @@ class Example extends Phaser.Scene {
         repeat: -1
     });
 
-    console.log("Shader aplikován na obrázek uvnitř kontejneru.");
+    console.log("Shader aplikován na kontejner.");
   }
-    setImageShader2(){
+    setShaderToImage(){
         
     }
 }
