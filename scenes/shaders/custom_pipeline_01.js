@@ -9,33 +9,52 @@ var config = {
         update: update
     }
 };
-var frag1 = `
-    #ifdef GL_ES
+var frag = `
     precision mediump float;
-    #endif
 
-    uniform float uTime;
+    uniform sampler2D uMainSampler;
     uniform vec2 uResolution;
+    uniform float uTime;
 
-    void main( void ) {
-        vec2 pos1=gl_FragCoord.xy/uResolution.x-vec2(0.50,uResolution.y/uResolution.x/2.0);
-        float l1=length(pos1);
-        float l2=step(0.5,fract(1.0/l1+uTime/1.8));
-        float a=step(0.5,fract(0.1*sin(20.*l1+uTime*1.)/l1+atan(pos1.x,pos1.y)*3.));
-        if(a!=l2 && l1>0.05){
-            gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-        }
+    varying vec2 outTexCoord;
+    varying vec4 outTint;
+
+    vec4 plasma()
+    {
+        vec2 pixelPos = gl_FragCoord.xy / uResolution * 20.0;
+        float freq = 0.8;
+        float value =
+            sin(uTime + pixelPos.x * freq) +
+            sin(uTime + pixelPos.y * freq) +
+            sin(uTime + (pixelPos.x + pixelPos.y) * freq) +
+            cos(uTime + sqrt(length(pixelPos - 0.5)) * freq * 2.0);
+
+        return vec4(
+            cos(value),
+            sin(value),
+            sin(value * 3.14 * 2.0),
+            cos(value)
+        );
     }
-    `;
+
+    void main()
+    {
+        vec4 texture = texture2D(uMainSampler, outTexCoord);
+
+        texture *= vec4(outTint.rgb * outTint.a, outTint.a);
+
+        gl_FragColor = texture * plasma();
+    }
+    `
 var CustomPipeline = new Phaser.Class({
     Extends: Phaser.Renderer.WebGL.Pipelines.SinglePipeline,
     initialize:
-    function CustomPipeline (game)
-    {
+    function CustomPipeline (game){
         Phaser.Renderer.WebGL.Pipelines.SinglePipeline.call(this, {
             game: game,
-            fragShader: frag1,
+            fragShader: frag,
             uniforms: [
+                'uMainSampler',
                 'uResolution',
                 'uTime'
             ]
@@ -44,7 +63,6 @@ var CustomPipeline = new Phaser.Class({
 });
 
 var game = new Phaser.Game(config);
-
 var sphere;
 var time = 0;
 var customPipeline;
@@ -58,14 +76,14 @@ function create (){
     customPipeline = this.renderer.pipelines.add('Custom', new CustomPipeline(game));
     customPipeline.set2f('uResolution', game.config.width, game.config.height);
     sphere = this.add.sprite(400, 300, 'timer_bg_01').setPipeline('Custom');
-
+  
     this.input.on('pointermove', function (pointer) {
         sphere.x = pointer.x;
         sphere.y = pointer.y;
     }, this);
 
     this.input.on('pointerdown', function (pointer) {
-        if (sphere.pipeline === customPipeline){
+        if (sphere.pipeline === customPipeline) {
             sphere.resetPipeline();
         } else {
             sphere.setPipeline('Custom');
