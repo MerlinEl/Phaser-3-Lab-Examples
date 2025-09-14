@@ -30,9 +30,10 @@ class TintImageShader_Scene extends Phaser.Scene {
 
     create() {
 
-         this.fromPipelineFile(this);
+        //  this.fromPipelineFile(this);
         // this.fromFrag(this);
         // this.tintBackground();
+        this.allInOne(this);
     }
 
     update(time, delta) {}
@@ -115,10 +116,14 @@ class TintImageShader_Scene extends Phaser.Scene {
                 });
             } 
         });
-        //this.add.shader ('TintPipeline', 400, 300, 512, 512);
+        this.add.shader ('TintPipeline', 400, 300, 512, 512);
         //.setRenderToTexture (TintPipeline);
-        const img = scene.add.image(400, 300, "timer_bg_01");
-        img.setPipeline (TintPipeline);
+        //const img = scene.add.image(400, 300, "timer_bg_01");
+        //img.setPipeline (TintPipeline);
+        //this.customPipeline.setFloat2('iResolution', scene.game.config.width, scene.game.config.height);
+        //img.pipeline.set1f('uPower', 0.7);
+        //var color = Phaser.Display.Color.HexStringToColor("#00ff00");
+        //img.pipeline.set3f("uTintColor", {x:color.redGL, y:color.greenGL, z:color.blueGL});
     }
     // This is a working example when pipeline is loaded from a file.
     fromPipelineFile(scene){
