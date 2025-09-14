@@ -10,22 +10,28 @@ var config = {
     }
 };
 var frag = `
-    #ifdef GL_ES
-    precision mediump float;
-    #endif
+precision mediump float;
 
-    uniform float uTime;
-    uniform vec2 uResolution;
+uniform sampler2D uMainSampler; // Vstupní textura (obrázek, na který se shader aplikuje)
+uniform float uRadius;          // Poloměr kruhu
+uniform vec2 uCenter;           // Střed kruhu
+uniform vec2 uResolution;      // Rozlišení plátna
 
-    void main( void ) {
-        vec2 pos1=gl_FragCoord.xy/uResolution.x-vec2(0.50,uResolution.y/uResolution.x/2.0);
-        float l1=length(pos1);
-        float l2=step(0.5,fract(1.0/l1+uTime/1.8));
-        float a=step(0.5,fract(0.1*sin(20.*l1+uTime*1.)/l1+atan(pos1.x,pos1.y)*3.));
-        if(a!=l2 && l1>0.05){
-            gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-        }
+varying vec2 outTexCoord;      // Texturové souřadnice
+
+void main() {
+    vec2 p = gl_FragCoord.xy - uCenter; // Pozice pixelu vzhledem ke středu
+    float dist = length(p);             // Vzdálenost pixelu od středu
+    float angle = atan(p.y, p.x);       // Úhel pixelu od středu
+
+    // Převedení úhlu na stupně a normalizace na 0 až 2pi
+    // Úhel pro první kvadrant (0 až pi/2)
+    if (dist > uRadius || angle < 0.0 || angle > 1.5708) { // 1.5708 = pi/2
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); // Průhledný pixel
+    } else {
+        gl_FragColor = texture2D(uMainSampler, outTexCoord); // Vykreslení původního pixelu
     }
+}
     `;
 var CustomPipeline = new Phaser.Class({
     Extends: Phaser.Renderer.WebGL.Pipelines.SinglePipeline,
@@ -36,8 +42,10 @@ var CustomPipeline = new Phaser.Class({
             game: game,
             fragShader: frag,
             uniforms: [
+                'uMainSampler',
+                'uCenter',
                 'uResolution',
-                'uTime'
+                'uRadius'
             ]
         });
     }
@@ -45,36 +53,47 @@ var CustomPipeline = new Phaser.Class({
 
 var game = new Phaser.Game(config);
 
-var sphere;
+var circle_image;
 var time = 0;
 var customPipeline;
 
-function preload (){
+function preload ()
+{
    this.load.setBaseURL("https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets");
-   this.load.image("timer_bg_01", "/images/timer_bg_01.png");
+    this.load.image("timer_bg_01", "/images/timer_bg_01.png");
 }
 
-function create (){
-    customPipeline = this.renderer.pipelines.add('Custom', new CustomPipeline(game));
-    customPipeline.set2f('uResolution', game.config.width, game.config.height);
-    sphere = this.add.sprite(400, 300, 'timer_bg_01').setPipeline('Custom');
+function create ()
+{
+   customPipeline = this.renderer.pipelines.add('Custom', new CustomPipeline(game));
 
+   customPipeline.set2f('uResolution', 800, 600);
+   customPipeline.set2f('uCenter',  400, 300);
+   customPipeline.set1f('uRadius',  150);
+
+    circle_image = this.add.sprite(400, 300, 'timer_bg_01').setPipeline('Custom');
+  
     this.input.on('pointermove', function (pointer) {
-        sphere.x = pointer.x;
-        sphere.y = pointer.y;
+        circle_image.x = pointer.x;
+        circle_image.y = pointer.y;
     }, this);
 
     this.input.on('pointerdown', function (pointer) {
-        if (sphere.pipeline === customPipeline){
-            sphere.resetPipeline();
-        } else {
-            sphere.setPipeline('Custom');
+
+        if (circle_image.pipeline === customPipeline)
+        {
+            circle_image.resetPipeline();
         }
+        else
+        {
+            circle_image.setPipeline('Custom');
+        }
+
     }, this);
 }
 
-function update (){
-    customPipeline.set1f('uTime', time);
-    time += 0.05;
-    sphere.rotation += 0.01;
+function update ()
+{
+    //customPipeline.set1f('uTime', time);
+    //time += 0.05;
 }
