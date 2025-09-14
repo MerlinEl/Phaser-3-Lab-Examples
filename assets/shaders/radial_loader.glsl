@@ -2,7 +2,7 @@
 precision mediump float;
 #endif
 
-uniform float time;        // animace
+uniform float progress;    // 0.0 - 1.0 (stav načítání)
 uniform vec2 resolution;   // velikost plátna
 
 void main(void) {
@@ -14,17 +14,14 @@ void main(void) {
     // normalizace úhlu na 0..1
     float normAngle = fract(angle / (2.0 * 3.14159265) + 0.5);
 
-    // "procenta" loaderu (0..1 cyklující podle času)
-    float progress = fract(time * 0.2); 
-
     // Tloušťka prstence
     float inner = 0.3;
     float outer = 0.4;
 
     // Podmínky: uvnitř prstence a menší úhel než progress
     if (r > inner && r < outer && normAngle < progress) {
-        gl_FragColor = vec4(1.0); // bílý loader
+        gl_FragColor = vec4(1.0); // bílý viditelný kus loaderu
     } else {
-        gl_FragColor = vec4(0.0); // průhledné/černé pozadí
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); // průhledné pozadí (pro masku)
     }
 }
