@@ -97,15 +97,15 @@ class Example extends Phaser.Scene {
     container.setSize(50, 100);
     
     // Vytvoř instanci shaderu pro kontejner
-    const shader = this.add.shader(baseShader, 0, 0, 800, 600, ["noise", "sinon", "rocks"]);
+    const shader = this.add.shader(baseShader, 0, 0, 800, 600, ["noise", "pic", "rocks"]);
 
     // Aplikuj shader jako post-pipeline na kontejner
     container.setPostPipeline(shader);
 
-    // Příklad, jak předat textury do shaderu: Teď není potřeba.
-    // shader.setSampler2D('iChannel0', this.textures.get('noise').getSourceImage());
-    // shader.setSampler2D('iChannel1', this.textures.get('sinon').getSourceImage());
-    // shader.setSampler2D('iChannel2', this.textures.get('rocks').getSourceImage());
+    shader.setUniform('uContainerPos', container.x, container.y);
+
+    this.active_container = container;
+    this.active_shader = shader;
 
     const screenWidth = this.sys.game.config.width;
     const screenHeight = this.sys.game.config.height;
@@ -131,7 +131,7 @@ class Example extends Phaser.Scene {
   update(){
         // V každém cyklu aktualizuj uniformní proměnné shaderu s aktuální pozicí kontejneru
         if (this.active_shader && this.active_container) {
-        this.active_shader.set2f('uContainerPos', this.active_container.x, this.active_container.y);
+        this.active_shader.setUniform('uContainerPos', this.active_container.x, this.active_container.y);
     }
   }
 }
