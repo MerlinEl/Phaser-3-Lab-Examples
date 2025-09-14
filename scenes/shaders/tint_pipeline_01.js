@@ -115,6 +115,8 @@ class TintImageShader_Scene extends Phaser.Scene {
                 });
             } 
         });
+        //this.add.shader ('TintPipeline', 400, 300, 512, 512);
+        //.setRenderToTexture (TintPipeline);
         const img = scene.add.image(400, 300, "timer_bg_01");
         img.setPipeline (TintPipeline);
     }
