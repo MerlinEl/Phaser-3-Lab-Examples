@@ -105,25 +105,29 @@ class TintImageShader_Scene extends Phaser.Scene {
 
     }
     allInOne(scene){
+        var frag = this.frag_tint;
         var TintPipeline = new Phaser.Class({
             Extends: Phaser.Renderer.WebGL.Pipelines.SinglePipeline,
             initialize:
             function TintPipeline (scene){
-                Phaser.Renderer.WebGL.Pipelines.SinglePipeline.call(this, {
+                Phaser.Renderer.WebGL.Pipelines.SinglePipeline.call(scene, {
                     game: scene,
                     renderer: scene.renderer,
-                    fragShader:this.frag_tint
+                    fragShader:frag
                 });
             } 
         });
-        this.add.shader ('TintPipeline', 400, 300, 512, 512);
-        //.setRenderToTexture (TintPipeline);
-        //const img = scene.add.image(400, 300, "timer_bg_01");
-        //img.setPipeline (TintPipeline);
+        var pp = new TintPipeline(scene);
+        //var pipeline = scene.renderer.pipelines.add('TintImage', new TintPipeline(scene));
+        scene.renderer.pipelines.add("TintPipeline", TintPipeline);
+        //scene.add.shader ('TintPipeline', 400, 300, 512, 512);
+        //scene.cameras.main.setRenderToTexture (TintPipeline);
+        const img = scene.add.image(400, 300, "timer_bg_01");
+        img.setPipeline (pp);
         //this.customPipeline.setFloat2('iResolution', scene.game.config.width, scene.game.config.height);
-        //img.pipeline.set1f('uPower', 0.7);
-        //var color = Phaser.Display.Color.HexStringToColor("#00ff00");
-        //img.pipeline.set3f("uTintColor", {x:color.redGL, y:color.greenGL, z:color.blueGL});
+        img.pipeline.set1f('uPower', 0.7);
+        var color = Phaser.Display.Color.HexStringToColor("#00ff00");
+        img.pipeline.set3f("uTintColor", {x:color.redGL, y:color.greenGL, z:color.blueGL});
     }
     // This is a working example when pipeline is loaded from a file.
     fromPipelineFile(scene){
