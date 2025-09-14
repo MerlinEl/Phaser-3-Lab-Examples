@@ -43,11 +43,9 @@ function run1(scene){
     scene.add.image(400, 300, 'myImage').setMask(mask);
 }
 function run2(scene){
-    // pozadí
-    scene.add.image(400, 300, 'bg');
+  scene.add.image(400, 300, 'bg');
 
-    // vytvoření shaderu
-     var shader = scene.make.shader({
+    var shader = scene.make.shader({
         key: 'radialMask',
         x: 400,
         y: 300,
@@ -56,15 +54,15 @@ function run2(scene){
         add: false
     });
 
-    // uděláme z něj masku
+    // doplníme uniformy ručně
+    shader.setUniform('uResolution.value', [800, 600]);
+    shader.setUniform('progress.value', 0.0);
+
     var mask = shader.createBitmapMask();
 
-    // aplikujeme na obrázek
-    var image = scene.add.image(400, 300, 'myImage').setMask(mask);
-console.log("image:", image);
-    // nastavíme progress (0.0 - 1.0)
-    shader.setUniform('progress.value', 0.5);
-    this.shader=shader;
+    scene.add.image(400, 300, 'myImage').setMask(mask);
+
+    this.shader = shader;
 }
 function run3(scene){
     this.radialPipeline = new Phaser.Renderer.WebGL.Pipelines.SinglePipeline({
