@@ -94,18 +94,24 @@ class Example extends Phaser.Scene {
  const baseShader = new Phaser.Display.BaseShader("BufferShader", fragmentShader);
     // Vytvoř kontejner pro obrázek, na který chceme aplikovat shader
     const container = this.add.container(400, 300);
-    container.setSize(50, 100);
     
-    // Vytvoř instanci shaderu pro kontejner
-    const shader = this.add.shader(baseShader, 0, 0, 800, 600, ["noise", "pic", "rocks"]);
+    // Přidáme obrázek do kontejneru
+    const img = this.add.image(0, 0, 'pic');
+    //img.setDisplaySize(200, 200);
+    container.add(img);
 
-    // Aplikuj shader jako post-pipeline na kontejner
-    container.setPostPipeline(shader);
+    // Vytvoř instanci shaderu pro kontejner
+    const shader = this.add.shader(baseShader, 0, 0, 400, 300, ["noise", "pic", "rocks"]);
+
+    // Aplikuj shader jako post-pipeline na kontejner NEFUNGUJE!
+    //container.setPostPipeline(shader);
 
     shader.setUniform('uContainerPos', container.x, container.y);
 
     this.active_container = container;
     this.active_shader = shader;
+
+    console.log("container:", container, "shader:", shader);
 
     const screenWidth = this.sys.game.config.width;
     const screenHeight = this.sys.game.config.height;
