@@ -8,6 +8,7 @@ uniform vec2 resolution;
 uniform sampler2D iChannel0;
 uniform sampler2D iChannel1;
 uniform sampler2D iChannel2;
+uniform vec2 uContainerPos; 
 
 varying vec2 fragCoord;
 
@@ -15,8 +16,10 @@ float avg(vec4 color) {
     return (color.r + color.g + color.b)/3.0;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
+void mainImage( out vec4 fragColor, in vec2 fragCoord ){
+     // Pozice pixelu vzhledem ke kontejneru
+    vec2 p = fragCoord.xy - uContainerPos;
+    
     // Flow Speed, increase to make the water flow faster.
     float speed = 1.0;
     
@@ -25,9 +28,10 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     
     // Water opacity, higher opacity means the water reflects more light.
     float opacity = 0.02;
- 
+
     // Normalized pixel coordinates (from 0 to 1)
-    vec2 uv = (fragCoord/resolution.xy);
+    // vec2 uv = (fragCoord/resolution.xy);
+     vec2 uv = (p/resolution.xy);
     vec2 scaledUv = uv*scale;
 
     // Water layers, layered on top of eachother to produce the reflective effect
@@ -72,6 +76,8 @@ void main(void)
 `;
 
 class Example extends Phaser.Scene {
+  active_shader;
+  active_container;
   constructor() {
     super("Example");
   }
@@ -80,34 +86,15 @@ class Example extends Phaser.Scene {
     // Use POT (power of two) textures (64x64, 128x128, 512x512, 1024x1024, …).
     this.load.setBaseURL("https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets");
     this.load.image("noise", "/textures/noise_01.png");
-    this.load.image("pic", "/images/dragon_bg_01.jpg");
     this.load.image("rocks", "/images/rocks_01.png");
-    this.load.image("sinon", "/images/sao-sinon.png");
+    this.load.image("pic", "/images/sao-sinon.png");
   }
 
   create() {
-    this.setShaderToBackground();
-    // this.setShaderToContainer();
-    //this.setShaderToImage();
-
-    // console.log("shader:", shader);
-    // const img = scene.add.image(400, 300, "sinon");
-    // // how to apply this shader on image?    
-  }
-  setShaderToBackground(){
-   const baseShader = new Phaser.Display.BaseShader(
-      "BufferShader",
-      fragmentShader
-    );
-    var shader = this.add
-      .shader(baseShader, 0, 0, 800, 600, ["noise", "pic", "rocks"])
-      .setOrigin(0, 0);
-  }
-  setShaderToContainer(){
-    const baseShader = new Phaser.Display.BaseShader("BufferShader", fragmentShader);
+ const baseShader = new Phaser.Display.BaseShader("BufferShader", fragmentShader);
     // Vytvoř kontejner pro obrázek, na který chceme aplikovat shader
     const container = this.add.container(400, 300);
-    container.setSize(100, 200);
+    container.setSize(50, 100);
     
     // Vytvoř instanci shaderu pro kontejner
     const shader = this.add.shader(baseShader, 0, 0, 800, 600, ["noise", "sinon", "rocks"]);
@@ -115,25 +102,38 @@ class Example extends Phaser.Scene {
     // Aplikuj shader jako post-pipeline na kontejner
     container.setPostPipeline(shader);
 
-    // Příklad, jak předat textury do shaderu:
-    shader.setSampler2D('iChannel0', this.textures.get('noise').getSourceImage());
-    shader.setSampler2D('iChannel1', this.textures.get('sinon').getSourceImage());
-    shader.setSampler2D('iChannel2', this.textures.get('rocks').getSourceImage());
+    // Příklad, jak předat textury do shaderu: Teď není potřeba.
+    // shader.setSampler2D('iChannel0', this.textures.get('noise').getSourceImage());
+    // shader.setSampler2D('iChannel1', this.textures.get('sinon').getSourceImage());
+    // shader.setSampler2D('iChannel2', this.textures.get('rocks').getSourceImage());
 
-    // Pokud potřebuješ, můžeš nastavit i další uniformy, jako "time" a "resolution"
-    this.tweens.add({
-        targets: shader,
-        time: 1.0, // Změna uniformní proměnné 'time'
-        duration: 2000,
-        yoyo: true,
-        repeat: -1
-    });
+    const screenWidth = this.sys.game.config.width;
+    const screenHeight = this.sys.game.config.height;
+     // Funkce, která vytvoří a spustí nový tween
+    const moveContainerRandomly = () => {
+        // Vytvoří nový tween
+        this.tweens.add({
+            targets: container,
+            x: Phaser.Math.Between(0, screenWidth),
+            y: Phaser.Math.Between(0, screenHeight),
+            duration: Phaser.Math.Between(1500, 3000), // Náhodná délka animace
+            ease: 'Power2',
+            onComplete: () => {
+                // Po dokončení tweenu zavoláme funkci znovu, čímž se vytvoří nekonečná smyčka
+                moveContainerRandomly();
+            }
+        });
+    };
 
-    console.log("Shader aplikován na kontejner.");
+    // Spustíme první pohyb
+    moveContainerRandomly();
   }
-    setShaderToImage(){
-        
+  update(){
+        // V každém cyklu aktualizuj uniformní proměnné shaderu s aktuální pozicí kontejneru
+        if (this.active_shader && this.active_container) {
+        this.active_shader.set2f('uContainerPos', this.active_container.x, this.active_container.y);
     }
+  }
 }
 
 const config = {
