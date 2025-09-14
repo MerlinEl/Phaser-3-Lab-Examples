@@ -47,7 +47,7 @@ var frag = `
     }
     `
 var CustomPipeline = new Phaser.Class({
-    Extends: Phaser.Renderer.WebGL.Pipelines.SinglePipeline,
+    Extends: Phaser.Renderer.WebGL.Pipelines.SinglePipeline, //or MultiPipeline
     initialize:
     function CustomPipeline (game){
         Phaser.Renderer.WebGL.Pipelines.SinglePipeline.call(this, {
