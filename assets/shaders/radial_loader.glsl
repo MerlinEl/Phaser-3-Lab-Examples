@@ -1,11 +1,11 @@
 precision mediump float;
 
-uniform vec2  uResolution;  // Phaser automaticky dodá
+uniform vec2  resolution;  // Phaser automaticky dodá
 uniform float progress;     // náš vlastní uniform (0.0–1.0)
 
 void main(void) {
     // Normalizované souřadnice kolem středu
-    vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+    vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / resolution.y;
     float r = length(uv);
     float angle = atan(uv.y, uv.x);
 
