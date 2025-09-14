@@ -1,13 +1,13 @@
 precision mediump float;
 
-uniform vec2      resolution;
-uniform float     progress;   // 0.0 - 1.0
+uniform vec2  uResolution;  // Phaser automaticky dodá
+uniform float progress;     // náš vlastní uniform (0.0–1.0)
 
 void main(void) {
     // Normalizované souřadnice kolem středu
-    vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / resolution.y;
-    float r = length(uv);            
-    float angle = atan(uv.y, uv.x);  
+    vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+    float r = length(uv);
+    float angle = atan(uv.y, uv.x);
 
     // normalizace úhlu na 0..1
     float normAngle = fract(angle / (2.0 * 3.14159265) + 0.5);
@@ -21,5 +21,6 @@ void main(void) {
         alpha = 1.0;
     }
 
-    gl_FragColor = vec4(1.0, 1.0, 1.0, alpha); // DŮLEŽITÉ: alfa určuje masku
+    // RGB může být libovolné, maska používá alfu
+    gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
 }
