@@ -18,7 +18,7 @@ function preload ()
 {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
     this.load.glsl('wave', '/shaders/shader1.frag.js');
-    this.load.glsl('radialMask', '/shaders/radial_loader_01.glsl');
+    this.load.glsl('radialMask', '/shaders/radial_loader_02.glsl');
     this.load.image('pic', '/images/sao-sinon.png');
     this.load.image('bg', '/images/purple-dots.png');
     this.load.image('myImage',  "/images/timer_bg_01.png");
@@ -35,7 +35,7 @@ function run1(scene){
         height: 600,
         add: false
     });
-
+console.log("shader:", shader)
     //  Make a Bitmap Mask from it
     var mask = shader.createBitmapMask();
 
@@ -57,7 +57,7 @@ function run2(scene){
     // doplníme uniformy ručně
     shader.setUniform('uResolution.value', [800, 600]);
     shader.setUniform('progress.value', 0.0);
-
+console.log("shader:", shader)
     var mask = shader.createBitmapMask();
 
     scene.add.image(400, 300, 'myImage').setMask(mask);
@@ -114,7 +114,7 @@ function run4(scene){
         height: 600,
         add: false
     });
-
+console.log("shader:", shader)
     //  Make a Bitmap Mask from it
     var mask = shader.createBitmapMask();
 
