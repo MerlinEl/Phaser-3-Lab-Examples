@@ -29,6 +29,7 @@ void main(void) {
 ---
 name: RadialLoader
 type: fragment
+uniform.progress: { "type": "1f", "value": 0.5}
 ---
 
 #define SHADER_FRAGMENT
