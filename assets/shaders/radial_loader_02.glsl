@@ -4,7 +4,7 @@ type: vertex
 author: MerlinEl
 ---
 
-// VERTEX
+// VERTEX 2.01
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -28,7 +28,7 @@ author: MerlinEl
 uniform.progress: { "type": "1f", "value": 0.0}
 ---
 
-// FRAGMENT
+// FRAGMENT v2.01
 #ifdef GL_ES
 precision mediump float;
 #endif
