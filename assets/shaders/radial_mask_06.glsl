@@ -43,7 +43,7 @@ void main() {
 
     float r = length(uv);
     float angle = atan(uv.y, uv.x);
-    if (angle < 0.0) angle += 6.283185307179586;
+    //if (angle < 0.0) angle += 6.283185307179586;
 
     // Posun tak, aby začínal nahoře (12:00)
     float normAngle = fract(angle / (2.0 * 3.14159265) + 0.75);
