@@ -9,12 +9,16 @@ precision mediump float;
 
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
+uniform vec2 uResolution;
+
 attribute vec2 inPosition;
 varying vec2 vUV;
 
 void main(void) {
     gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);
-    vUV = inPosition;          // Phaser už normalizuje do 0..1
+
+    // normalizace na 0..1
+    vUV = inPosition / uResolution;
 }
 
 ---
@@ -28,7 +32,7 @@ precision mediump float;
 
 uniform float mouthAngle;   // úhel otevření (radiany)
 varying vec2 vUV;
-// v1.02
+//v1.03
 void main(void) {
     // převedeme do rozsahu -1..1 kolem středu
     vec2 uv = vUV * 2.0 - 1.0;
