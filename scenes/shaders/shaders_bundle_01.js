@@ -14,7 +14,7 @@ var game = new Phaser.Game(config);
 function preload ()
 {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
-    this.load.glsl('bundle', '/shaders/bundle2.glsl.js');
+    this.load.glsl('bundle', '/shaders/bundle2.glsl');
 }
 
 function create ()
