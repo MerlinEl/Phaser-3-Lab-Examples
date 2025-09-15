@@ -24,8 +24,8 @@ void main(void) {
 ---
 name: radialMask
 type: fragment
-uniforms:
-  progress: { type: 1f, value: 0.0 }
+uniform.progress: { "type": "1f", "value": 0.0 }
+//uniform.iChannel0: { "type": "sampler2D", "value": null, "textureData": { "repeat": true } }
 author: MerlinEl
 ---
 
