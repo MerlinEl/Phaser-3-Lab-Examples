@@ -24,7 +24,6 @@ void main(void) {
 ---
 name: pacman
 type: fragment
-uniform.uResolution { "type": "2f", "value": [400, 400]};
 uniform.mouthAngle { "type": "1f", "value": 16.0 }
 ---
 
