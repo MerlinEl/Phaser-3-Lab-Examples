@@ -7,6 +7,7 @@ type: vertex
 precision mediump float;
 #endif
 
+precision mediump float;
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
 uniform vec2 uResolution;
