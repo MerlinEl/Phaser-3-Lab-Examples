@@ -16,7 +16,7 @@ var loaderValue = 0;
 
 function preload() {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
-    this.load.glsl('radialMask', '/shaders/radial_loader_02.glsl');
+    this.load.glsl('bundle', '/shaders/radial_loader_02.glsl');
     this.load.image('bg', '/images/purple-dots.png');
     this.load.image('myImage', '/images/timer_bg_01.png');
 }
@@ -32,6 +32,8 @@ function create() {
         height: 600,
         add: false
     });
+
+console.log("shader:", shader);
 
     // nastavíme uResolution ručně
     shader.setUniform('uResolution.value', [800, 600]);
