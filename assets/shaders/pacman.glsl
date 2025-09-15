@@ -24,7 +24,7 @@ void main(void) {
 ---
 name: pacman
 type: fragment
-uniform.mouthAngle { "type": "1f", "value": 16.0 }
+uniform.mouthAngle { "type": "1f", "value": 0.5 }
 ---
 
 #ifdef GL_ES
@@ -33,7 +33,7 @@ precision mediump float;
 
 uniform float mouthAngle;   // úhel otevření (radiany)
 varying vec2 vUV;
-// v1.06
+// v1.07
 void main(void) {
     // souřadnice -1..1 kolem středu
     vec2 uv = vUV * 2.0 - 1.0;
