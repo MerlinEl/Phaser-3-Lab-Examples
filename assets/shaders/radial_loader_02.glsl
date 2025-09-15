@@ -24,8 +24,9 @@ void main(void) {
 ---
 name: radialMask
 type: fragment
+uniforms:
+  progress: { type: 1f, value: 0.0 }
 author: MerlinEl
-uniform.progress: { "type": "1f", "value": 0.0}
 ---
 
 // FRAGMENT v2.01
