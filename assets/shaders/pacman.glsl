@@ -32,9 +32,9 @@ precision mediump float;
 
 uniform float mouthAngle;   // úhel otevření (radiany)
 varying vec2 vUV;
-//v1.03
+//v1.04
 void main(void) {
-    // převedeme do rozsahu -1..1 kolem středu
+    // souřadnice -1..1 kolem středu
     vec2 uv = vUV * 2.0 - 1.0;
 
     float r = length(uv);
@@ -43,11 +43,12 @@ void main(void) {
 
     float alpha = 0.0;
     if (r < 1.0) {
-        // vyřízneme klín (ústa)
-        if (!(angle > 6.2831853 - mouthAngle || angle < mouthAngle)) {
+        // Pacman kouše směrem doprava (ústa u osy X)
+        if (angle > mouthAngle && angle < (6.2831853 - mouthAngle)) {
             alpha = 1.0;
         }
     }
 
     gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);
 }
+
