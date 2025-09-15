@@ -1,4 +1,7 @@
-// Radial Loader Shader
+---
+name: RadialLoader
+type: vertex
+---
 
 #ifdef GL_ES
 precision mediump float;
@@ -24,8 +27,10 @@ void main(void) {
 }
 
 ---
+name: RadialLoader
+type: fragment
+---
 
-// === FRAGMENT ===
 #define SHADER_FRAGMENT
 
 #ifdef GL_ES
