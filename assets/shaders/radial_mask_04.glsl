@@ -1,3 +1,10 @@
+---
+name: pacman
+type: fragment
+author: MerlinEl & Gpt
+uniform.duration: { "type": "1f", "value": 1000 }
+---
+
 precision mediump float;
 
 uniform vec2  resolution;
