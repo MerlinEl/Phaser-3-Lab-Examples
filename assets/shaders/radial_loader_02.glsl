@@ -31,7 +31,7 @@ void main(void) {
 name: radialMask
 type: fragment
 author: MerlinEl
-uniform.progress: { "type": "1f", "value": 0.5}
+uniform.progress: { "type": "1f", "value": 0.0}
 ---
 
 #define SHADER_FRAGMENT
