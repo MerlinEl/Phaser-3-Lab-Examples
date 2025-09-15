@@ -2,7 +2,7 @@
 name: pacman
 type: vertex
 ---
-// version 0.01
+
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -27,7 +27,7 @@ precision mediump float;
 
 uniform float mouthAngle; // úhel "úst" v radiánech
 uniform vec2  uResolution; // velikost shader plochy (např. 400x400)
-
+// version 0.01
 void main(void) {
     // souřadnice pixelu v rozsahu -1..1 kolem středu
     vec2 uv = (gl_FragCoord.xy / uResolution) * 2.0 - 1.0;
