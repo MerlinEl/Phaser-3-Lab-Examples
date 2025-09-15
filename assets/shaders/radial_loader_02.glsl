@@ -1,5 +1,5 @@
 ---
-name: RadialLoader
+name: radialMask
 type: vertex
 ---
 
@@ -27,7 +27,7 @@ void main(void) {
 }
 
 ---
-name: RadialLoader
+name: radialMask
 type: fragment
 uniform.progress: { "type": "1f", "value": 0.5}
 ---
