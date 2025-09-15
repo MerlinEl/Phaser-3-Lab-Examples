@@ -24,7 +24,8 @@ void main(void) {
     // Podmínky: uvnitř prstence a menší úhel než progress
     if (r > inner && r < outer && normAngle < progress) {
         gl_FragColor = vec4(1.0); // bílý loader
-    } else {
-        gl_FragColor = vec4(0.0); // průhledné/černé pozadí
-    }
+    } 
+    //else {
+    //    gl_FragColor = vec4(0.0); // průhledné/černé pozadí
+    //}
 }
