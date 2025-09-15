@@ -4,27 +4,21 @@ type: vertex
 author: MerlinEl
 ---
 
+// VERTEX
 #ifdef GL_ES
 precision mediump float;
 #endif
 
-// === VERTEX ===
-#define SHADER_VERTEX
-
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
-uniform vec2 uResolution;
 
 attribute vec2 inPosition;
 
-varying vec2 fragCoord;
 varying vec2 outTexCoord;
 
 void main(void) {
     gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);
-
-    fragCoord = vec2(inPosition.x, uResolution.y - inPosition.y);
-    outTexCoord = vec2(inPosition.x / uResolution.x, fragCoord.y / uResolution.y);
+    outTexCoord = inPosition / 800.0; // nebo lépe: Phaser ti to už předá jako 0..width
 }
 
 ---
@@ -34,26 +28,25 @@ author: MerlinEl
 uniform.progress: { "type": "1f", "value": 0.0}
 ---
 
-#define SHADER_FRAGMENT
-
+// FRAGMENT
 #ifdef GL_ES
 precision mediump float;
 #endif
 
-uniform vec2  uResolution;
 uniform float progress;   // 0.0 – 1.0
-
-varying vec2 fragCoord;
+varying vec2 outTexCoord;
 
 void main(void) {
-    vec2 uv = (fragCoord - 0.5 * uResolution) / uResolution.y;
+    // souřadnice kolem středu [−1..1]
+    vec2 uv = outTexCoord * 2.0 - 1.0;
 
     float r = length(uv);
     float angle = atan(uv.y, uv.x);
 
+    // normalizace úhlu 0..1 (0 = vpravo)
     float normAngle = fract(angle / (2.0 * 3.14159265) + 0.5);
 
-    float radius = 0.4;
+    float radius = 0.8; // větší kruh
     float alpha = 0.0;
 
     if (r < radius && normAngle < progress) {
@@ -62,3 +55,4 @@ void main(void) {
 
     gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
 }
+
