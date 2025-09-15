@@ -1,8 +1,4 @@
-
-
 ---
-name: pacman
-type: fragment
 uniform.duration: { "type": "1f", "value": 3000 }   // default 3000 ms
 ---
 
