@@ -18,7 +18,7 @@ function preload ()
 {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
     this.load.glsl('wave', '/shaders/shader1.frag.js');
-    this.load.glsl('radialMask', '/shaders/radial_mask_01.glsl.js');
+    this.load.glsl('radialMask', '/shaders/radial_loader_01.glsl');
     this.load.image('pic', '/images/sao-sinon.png');
     this.load.image('bg', '/images/purple-dots.png');
     this.load.image('myImage',  "/images/timer_bg_01.png");
@@ -103,9 +103,27 @@ function run3(scene){
     //     }
     // });
 }
+function run4(scene){
+    scene.add.image(400, 300, 'bg');
+
+    var shader = scene.make.shader({
+        key: 'radialMask',
+        x: 400,
+        y: 300,
+        width: 800,
+        height: 600,
+        add: false
+    });
+
+    //  Make a Bitmap Mask from it
+    var mask = shader.createBitmapMask();
+
+    //  Apply the mask to this image
+    scene.add.image(400, 300, 'myImage').setMask(mask);
+}
 function create ()
 {
-    run1(this);
+    run2(this);
 }
 function update(time, delta) {
     // loaderValue roste od 0 do 100
@@ -114,6 +132,6 @@ function update(time, delta) {
 
     // nastav progress do shaderu
     if (this.shader) {
-        this.shader.setUniform('progress.value', loaderValue / 100);
+       this.shader.setUniform('progress.value', loaderValue / 100);
     }
 }
