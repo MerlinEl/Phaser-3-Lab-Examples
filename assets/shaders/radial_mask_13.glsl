@@ -1,4 +1,6 @@
 ---
+name: pacman
+type: fragment
 uniform.duration: { "type": "1f", "value": 3000 } 
 ---
 
