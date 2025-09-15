@@ -24,7 +24,7 @@ void main(void) {
 ---
 name: pacman
 type: fragment
-uniform.duration: { "type": "1f", "value": 3000 } 
+uniform.duration: { "type": 1f, "value": 3000 } 
 ---
 
 #ifdef GL_ES
