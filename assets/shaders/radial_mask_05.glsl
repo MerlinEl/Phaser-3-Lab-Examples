@@ -8,7 +8,7 @@ uniform vec2  resolution;
 uniform float time;       // čas v sekundách, Phaser posílá automaticky
 uniform float duration;   // v milisekundách
 varying vec2 fragCoord;
-// v1.05
+// v1.06
 void main() {
     // Souřadnice kolem středu (−1 .. 1)
     vec2 uv = (2.0 * fragCoord - resolution) / resolution.y;
