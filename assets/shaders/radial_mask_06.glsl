@@ -1,30 +1,4 @@
----
-name: pacman
-type: vertex
----
 
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-uniform mat4 uProjectionMatrix;
-uniform mat4 uViewMatrix;
-uniform vec2  uResolution;
-uniform vec2  resolution;      // fallback (někdy Phaser používá jiné jméno)
-
-attribute vec2 inPosition;
-varying vec2 fragCoord;
-
-void main(void) {
-    gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);
-
-    // Volba správného resolution (uResolution preferujeme, pokud je nenulové)
-    vec2 R = (uResolution.x > 0.0) ? uResolution : resolution;
-
-    // fragCoord v pixelech, stejný prostor jako dříve používal fragment shader
-    // flip Y tak, aby 0,0 byl v levém dolním rohu pokud to fragment očekává
-    fragCoord = vec2(inPosition.x, R.y - inPosition.y);
-}
 
 ---
 name: pacman
