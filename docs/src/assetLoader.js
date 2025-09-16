@@ -15,13 +15,18 @@
     }
 */
 (function (global) {
-    const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
+    // prettier-ignore
+    const IS_LOCAL =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1" ||
+    location.protocol === "file:";
 
     const REMOTE_BASE = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
 
     function loadAsset(scene, key, path, type = "image") {
         const localPath = "../" + path;
         const remotePath = REMOTE_BASE + path;
+
         if (IS_LOCAL) {
             scene.load[type](key, localPath);
         } else {
@@ -38,6 +43,8 @@
         loadAsset,
         loadAssets,
     };
+
+    console.log("✅ AssetUtils načteno");
 })(window);
 
 /*
