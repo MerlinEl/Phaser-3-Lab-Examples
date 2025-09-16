@@ -46,19 +46,22 @@
         html += `<details${openAttr}><summary><strong>${category}</strong></summary><ul>`;
 
         data[category].forEach((scene) => {
-          let url;
-          console.log("index.html > use labs:", useLabs, "local:", IS_LOCAL);
-
+          let url;  
+          console.log("index.html > use labs:", useLabs, "local:", IS_LOCAL); 
           if (useLabs) {
-            // vždy Labs → načítáme z GitHub raw (funguje lokálně i online)
-            url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
+            if (IS_LOCAL) {
+              // Lokálně – labs načítá přímo z disku
+              url = `${LABS_URL}${scene.file}?${Date.now()}`;
+            } else {
+              // GitHub Pages – labs bere z raw.githubusercontent
+              url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
+            }
           } else {
-            // Play mode – funguje vždy
+            // Play mode – vždy play.html (lokál i GitHub)
             url = `play.html?scene=${scene.file}`;
           }
-
-          let entry = `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
-          console.log("\tentry:", entry);
+          let entry = `<li><a href="${url}" target="_blank">${scene.name}</a></li>`
+          console.log("\tentry:", entry); 
           html += entry;
         });
 
@@ -77,3 +80,5 @@
 </script>
 </body>
 </html>
+  <script>
+

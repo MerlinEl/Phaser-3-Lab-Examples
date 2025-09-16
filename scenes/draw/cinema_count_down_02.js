@@ -113,9 +113,11 @@ var game = new Phaser.Game(config);
 let countdown;
 
 function preload() {
-    const IS_LOCAL = location.hostname === "localhost" || location.protocol === "file:";
+    const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
     if (!IS_LOCAL) {
         this.load.setBaseURL("https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main");
+    } else {
+        this.load.setBaseURL("..");
     }
     this.load.image("bg", "/assets/images/purple-dots.png");
     this.load.image("timer_image", "/assets/images/timer_bg_01.png");
