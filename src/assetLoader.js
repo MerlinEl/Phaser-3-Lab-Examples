@@ -1,22 +1,27 @@
 /**
  * Aby načítání souborů fungovalo jak lokálně, tak na GitHub Pages
+ *  Nastavení
+ *  do play.html přidej  <script src="../src/assetLoader.js"></script>
  *  Použití 
     function preload() {
-        // obrázky
-        loadAsset(this, "timer_image", "assets/images/timer_bg_01.png", "image");
-        loadAsset(this, "bg", "assets/images/purple-dots.png", "image");
+        // varianta pro jeden soubor
+        AssetUtils.loadAsset(this, "bg", "assets/images/purple-dots.png");
 
-        // skripty
-        loadAsset(this, "CinemaCountdown", "src/CinemaCountdown.js", "script");
+        // varianta pro více souborů
+        AssetUtils.loadAssets(this, [
+            { key: "timer_image", path: "assets/images/timer_bg_01.png" },
+            { key: "CinemaCountdown", path: "src/CinemaCountdown.js", type: "script" }
+        ]);
     }
 */
-const IS_LOCAL = location.hostname === "localhost" || location.protocol === "file:";
+const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
 
 // base URL pro vzdálený repozitář
 const REMOTE_BASE = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
 
+// načte jeden asset
 function loadAsset(scene, key, path, type = "image") {
-    const localPath = path;
+    const localPath = "../" + path;
     const remotePath = REMOTE_BASE + path;
 
     if (IS_LOCAL) {
@@ -26,10 +31,21 @@ function loadAsset(scene, key, path, type = "image") {
     }
 }
 
-// zajistí, že funkce bude vidět i globálně
-window.loadAsset = loadAsset;
+// načte více assetů najednou
+function loadAssets(scene, assets = []) {
+    assets.forEach(({ key, path, type = "image" }) => {
+        loadAsset(scene, key, path, type);
+    });
+}
+
+// zpřístupnění pod jedním jménem
+window.AssetUtils = {
+    loadAsset,
+    loadAssets,
+};
 
 /*
+ * starý způsob load by type
  switch (type) {
         case "image":
             scene.load.image(key, finalUrl);

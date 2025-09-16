@@ -17,63 +17,63 @@
 </head>
 <body>
   <h1>Mini Phaser Labs</h1>
-
-  <div style="text-align:center; margin-bottom: 20px;">
-    <label>
-      <input type="checkbox" id="toggleLabs" />
-      Používat labs.phaser.io
-    </label>
-  </div>
-
+  <button id="toggle-mode">Režim: Play</button>
   <div id="scene-list"></div>
 
-  <script>
-    const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
-    const BASE_URL =
-      "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
+<script>
+  const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
+  const BASE_URL = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
+  const IS_LOCAL = location.hostname === "localhost" || location.protocol === "file:";
 
-    $(function () {
-      $.getJSON("scenes.json", function (data) {
-        renderSceneList(data);
+  let useLabs = false; // výchozí režim = Play
 
-        // přegenerovat seznam při změně toggle
-        $("#toggleLabs").on("change", function () {
-          renderSceneList(data);
-        });
-      });
-    });
+  function toggleMode() {
+    useLabs = !useLabs;
+    $("#toggle-mode").text(`Režim: ${useLabs ? "Labs" : "Play"}`);
+    renderSceneList();
+  }
 
-    function renderSceneList(data) {
+  function renderSceneList() {
+    $.getJSON("scenes.json", function (data) {
       let html = "";
       let first = true;
-      const IS_LOCAL =
-        location.hostname === "localhost" || location.protocol === "file:";
-      const useLabs = $("#toggleLabs").is(":checked");
 
       for (const category in data) {
         const openAttr = first ? " open" : "";
-        html += `
-          <details${openAttr}>
-            <summary><strong>${category}</strong></summary>
-            <ul>`;
+        html += `<details${openAttr}><summary><strong>${category}</strong></summary><ul>`;
+
         data[category].forEach((scene) => {
           let url;
-          if (useLabs && !IS_LOCAL) {
-            url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
+
+          if (useLabs) {
+            if (IS_LOCAL) {
+              // Lokálně – labs načítá přímo z disku
+              url = `${LABS_URL}${scene.file}?${Date.now()}`;
+            } else {
+              // GitHub Pages – labs bere z raw.githubusercontent
+              url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
+            }
           } else {
+            // Play mode – vždy play.html (lokál i GitHub)
             url = `play.html?scene=${scene.file}`;
           }
 
           html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
         });
-        html += `
-            </ul>
-          </details>`;
+
+        html += `</ul></details>`;
         first = false;
       }
+
       $("#scene-list").html(html);
-    }
-  </script>
+    });
+  }
+
+  $(function () {
+    $("#toggle-mode").on("click", toggleMode);
+    renderSceneList();
+  });
+</script>
 </body>
 </html>
   <script>

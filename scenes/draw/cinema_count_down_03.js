@@ -12,19 +12,22 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    const IS_LOCAL = location.hostname === "localhost" || location.protocol === "file:";
-    if (!IS_LOCAL) {
-        this.load.setBaseURL("https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main");
-    }
-    this.load.image("bg", "/assets/images/purple-dots.png");
-    this.load.image("timer_image", "/assets/images/timer_bg_01.png");
-    this.load.script("CinemaCountdown", "/src/CinemaCountdown.js");
+    AssetUtils.loadAssets(this, [
+        { key: "bg", path: "assets/images/purple-dots.png" },
+        { key: "timer_image", path: "assets/images/timer_bg_01.png" },
+        { key: "CinemaCountdown", path: "src/CinemaCountdown.js", type: "script" },
+    ]);
 }
 
 function create() {
     this.add.image(400, 300, "bg");
 
-    new CinemaCountdown(this, 400, 300, "timer_image", 3, () => {
-        console.log("Countdown hotovo!");
+    var countdown = new CinemaCountdown(this, 400, 300, "timer_image", 3, () => {
+        console.log("Countdown hotovo! 123");
+    });
+
+    // kliknutí myší spustí odpočet
+    this.input.once("pointerdown", () => {
+        countdown.start();
     });
 }

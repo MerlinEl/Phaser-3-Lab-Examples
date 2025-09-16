@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Play Scene</title>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+  <!-- <script src="../src/env.js"></script> -->
   <script src="../src/assetLoader.js"></script>
   <style>
     body { margin: 0; overflow: hidden; background: #000; }
@@ -19,8 +20,11 @@
       document.body.innerHTML = "<h2>Chybí parametr ?scene=</h2>";
     } else {
       const script = document.createElement("script");
-      script.src = "../" + sceneFile;
+      script.src = "../" + sceneFile + `?v=${Date.now()}`;
       script.onload = () => {
+        // --- Styl: class extends Phaser.Scene ---
+        // vytvořit scénu: class Scene1 extends Phaser.Scene {}
+        // na konci přidat: window.currentScene = Scene1;
         if (typeof window.currentScene !== "undefined") {
           const config = {
             type: Phaser.AUTO,
@@ -30,6 +34,9 @@
             scene: window.currentScene
           };
           new Phaser.Game(config);
+        } else if (typeof window.game !== "undefined") {
+          // --- Styl: var game = new Phaser.Game(config) ---
+          console.log("Scéna si spustila vlastní hru:", sceneFile);
         } else {
           console.error("Scéna se nenačetla správně:", sceneFile);
         }
