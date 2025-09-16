@@ -32,6 +32,7 @@
           script.src = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/"
             + sceneFile + `?v=${Date.now()}`;
         }
+        console.log("play.html > local:", IS_LOCAL, "src:", script.src);
         script.onload = () => {
           // --- Styl: class extends Phaser.Scene ---
           // vytvořit scénu: class Scene1 extends Phaser.Scene {}
