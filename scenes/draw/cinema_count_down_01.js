@@ -13,18 +13,18 @@ var config = {
 var game = new Phaser.Game(config);
 
 let graphics;
-let maskShape;
 let mask;
 let img;
+let countdownText;
 
-let angle = 0;
-let countdown = 3;
-let nextStepTime = 0;
+let totalSeconds = 3;
+let startTime;
+let elapsed = 0;
 
 function preload() {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
     this.load.image('bg', '/images/purple-dots.png');
-    this.load.image('timer_image',  "/images/timer_bg_01.png");
+    this.load.image('timer_image', "/images/timer_bg_01.png");
 }
 
 function create() {
@@ -34,43 +34,43 @@ function create() {
     // obrázek, který maskujeme
     img = this.add.image(400, 300, 'timer_image');
 
-    // vytvoříme graphics objekt pro kreslení masky
+    // graphics pro masku
     graphics = this.make.graphics({x:0, y:0, add:false});
-
-    // maska na základě grafiky
     mask = graphics.createGeometryMask();
     img.setMask(mask);
 
-    // text s odpočtem
-    this.countdownText = this.add.text(400, 300, countdown, {
+    // text odpočtu
+    countdownText = this.add.text(400, 300, totalSeconds, {
         fontSize: '128px',
         color: '#ffffff',
         fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    nextStepTime = this.time.now + 1000; // první změna po 1s
+    // start čas
+    startTime = this.time.now;
 }
 
 function update(time, delta) {
+    elapsed = (time - startTime) / 1000; // sekundy
+
+    let remaining = Math.ceil(totalSeconds - elapsed);
+
     graphics.clear();
+    if (remaining > 0) {
+        // poměr od 1 → 0
+        let t = (totalSeconds - elapsed) % 1; 
+        let angle = Phaser.Math.Linear(360, 0, 1 - t);
 
-    // nakreslit "koláč" (výseč) který se bude otáčet
-    graphics.fillStyle(0xffffff);
-    graphics.slice(400, 300, 300, Phaser.Math.DegToRad(-90), Phaser.Math.DegToRad(angle - 90), true);
-    graphics.fillPath();
+        graphics.fillStyle(0xffffff);
+        graphics.slice(400, 300, 300, Phaser.Math.DegToRad(-90), Phaser.Math.DegToRad(angle - 90), true);
+        graphics.fillPath();
 
-    // zvětšovat úhel -> roste maska
-    angle += 180 * delta / 1000; // 180° za sekundu
-
-    // když uplyne 1s, snížíme countdown
-    if (time > nextStepTime) {
-        countdown--;
-        if (countdown > 0) {
-            this.countdownText.setText(countdown);
-        } else {
-            this.countdownText.setText("GO!");
-        }
-        nextStepTime = time + 1000;
-        angle = 0; // reset úhlu pro další číslo
+        // text nastavíme podle zbývající celé sekundy
+        countdownText.setText(remaining);
+        countdownText.setVisible(true);
+    } else {
+        // hotovo -> skryjeme
+        countdownText.setVisible(false);
+        img.clearMask(true);
     }
 }
