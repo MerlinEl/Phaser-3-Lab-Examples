@@ -19,7 +19,6 @@ let countdownText;
 
 let totalSeconds = 3;
 let startTime;
-let elapsed = 0;
 
 function preload() {
     this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
@@ -31,7 +30,7 @@ function create() {
     // pozadí
     this.add.image(400, 300, 'bg');
 
-    // obrázek, který maskujeme
+    // obrázek, který budeme maskovat
     img = this.add.image(400, 300, 'timer_image');
 
     // graphics pro masku
@@ -46,30 +45,34 @@ function create() {
         fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    // start čas
     startTime = this.time.now;
 }
 
 function update(time, delta) {
-    elapsed = (time - startTime) / 1000; // sekundy
-
+    let elapsed = (time - startTime) / 1000; // v sekundách
     let remaining = Math.ceil(totalSeconds - elapsed);
 
     graphics.clear();
+
     if (remaining > 0) {
-        // poměr od 1 → 0
-        let t = (totalSeconds - elapsed) % 1; 
-        let angle = Phaser.Math.Linear(360, 0, 1 - t);
+        // 0 → 360 stupňů během celého odpočtu
+        let progress = Phaser.Math.Clamp(elapsed / totalSeconds, 0, 1);
+        let angle = Phaser.Math.Linear(0, 360, progress); // CW směr
 
         graphics.fillStyle(0xffffff);
-        graphics.slice(400, 300, 300, Phaser.Math.DegToRad(-90), Phaser.Math.DegToRad(angle - 90), true);
+        graphics.slice(
+            400, 300, 300,
+            Phaser.Math.DegToRad(-90),                 // začínáme nahoře
+            Phaser.Math.DegToRad(angle - 90),          // konec podle progressu
+            true
+        );
         graphics.fillPath();
 
         // text nastavíme podle zbývající celé sekundy
         countdownText.setText(remaining);
         countdownText.setVisible(true);
     } else {
-        // hotovo -> skryjeme
+        // odpočet dokončen
         countdownText.setVisible(false);
         img.clearMask(true);
     }
