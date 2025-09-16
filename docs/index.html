@@ -20,21 +20,30 @@
   <div id="scene-list"></div>
 
   <script>
+
+    const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
+    const BASE_URL = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
+
     $(function(){
       $.getJSON("scenes.json", function(data){
         let html = "";
+        let first = true; // první kategorie má být otevřená
         for (const category in data) {
+          const openAttr = first ? " open" : "";
           html += `
-            <details>
+            <details${openAttr}>
               <summary><strong>${category}</strong></summary>
               <ul>`;
           data[category].forEach(scene => {
-            html += `
-              <li><a href="play.html?scene=${scene.file}">${scene.name}</a></li>`;
+            const url = (location.hostname === "localhost" || location.protocol === "file:")
+              ? `play.html?scene=${scene.file}`
+              : `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
+            html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
           });
           html += `
               </ul>
             </details>`;
+          first = false; // jen první kategorie otevřená
         }
         $("#scene-list").html(html);
       });
@@ -42,3 +51,4 @@
   </script>
 </body>
 </html>
+<script>
