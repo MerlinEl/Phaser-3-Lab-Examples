@@ -22,6 +22,8 @@ function preload() {
 function create() {
     this.add.image(400, 300, "bg");
 
+    this.add.text(20, 20, "Klikni pro spuštění...");
+
     var countdown = new CinemaCountdown(this, 400, 300, "timer_image", 3, () => {
         console.log("Countdown hotovo! 123");
     });
