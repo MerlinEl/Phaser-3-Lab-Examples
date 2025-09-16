@@ -16,6 +16,7 @@ let graphics;
 let mask;
 let img;
 let countdownText;
+let cross;
 
 let totalSeconds = 3;
 let startTime;
@@ -36,6 +37,8 @@ function create() {
     // graphics pro masku
     graphics = this.make.graphics({x:0, y:0, add:false});
     mask = graphics.createGeometryMask();
+
+    // nastavíme masku na oba objekty
     img.setMask(mask);
 
     // text odpočtu
@@ -44,6 +47,21 @@ function create() {
         color: '#ffffff',
         fontStyle: 'bold'
     }).setOrigin(0.5);
+
+    // křížek – kratší, aby byl uvnitř timer_image
+    cross = this.add.graphics();
+    drawCross(cross, img.width / 2 - 10);
+    cross.setAlpha(0.5);
+    cross.setMask(mask); // stejná maska
+
+    // animace blikání
+    this.tweens.add({
+        targets: cross,
+        alpha: { from: 0.5, to: 0 },
+        duration: 500,
+        yoyo: true,
+        repeat: -1
+    });
 
     startTime = this.time.now;
 }
@@ -55,25 +73,34 @@ function update(time, delta) {
     graphics.clear();
 
     if (remaining > 0) {
-        // 0 → 360 stupňů během celého odpočtu
+        // progress od 0 → 1
         let progress = Phaser.Math.Clamp(elapsed / totalSeconds, 0, 1);
         let angle = Phaser.Math.Linear(0, 360, progress); // CW směr
 
         graphics.fillStyle(0xffffff);
         graphics.slice(
-            400, 300, 300,
-            Phaser.Math.DegToRad(-90),                 // začínáme nahoře
-            Phaser.Math.DegToRad(angle - 90),          // konec podle progressu
+            400, 300, 300, // poloměr masky držíme velký
+            Phaser.Math.DegToRad(-90),
+            Phaser.Math.DegToRad(angle - 90),
             true
         );
         graphics.fillPath();
 
-        // text nastavíme podle zbývající celé sekundy
         countdownText.setText(remaining);
         countdownText.setVisible(true);
     } else {
-        // odpočet dokončen
         countdownText.setVisible(false);
         img.clearMask(true);
+        cross.clearMask(true);
+        cross.setVisible(false);
     }
+}
+
+function drawCross(g, size) {
+    g.clear();
+    g.lineStyle(4, 0xffffff, 1);
+    // svislá čára
+    g.lineBetween(400, 300 - size, 400, 300 + size);
+    // vodorovná čára
+    g.lineBetween(400 - size, 300, 400 + size, 300);
 }
