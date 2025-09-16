@@ -1,9 +1,8 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini Phaser Labs (GitHub)</title>
-  <base href="/Phaser-3-Lab-Examples/"> <!-- 💡 DŮLEŽITÉ -->
+  <meta charset="UTF-8" />
+  <title>Mini Phaser Labs</title>
   <style>
     body { font-family: sans-serif; background:#f4f4f4; margin:20px; }
     h1 { text-align:center; }
@@ -16,24 +15,25 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-  <h1>Mini Phaser Labs (GitHub Index)</h1>
+  <h1>Mini Phaser Labs</h1>
   <div id="scene-list"></div>
 
   <script>
-    const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
-    const BASE_URL = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
+    $(function () {
+      // base path = vždy složka doc/
+      const base = "./";
 
-    $.getJSON("scenes.json", function(data){   // už nemusí být ../
-      let html = "";
-      for (const category in data) {
-        html += `<div class="category"><h2>${category}</h2><ul>`;
-        data[category].forEach(scene => {
-          const url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
-          html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
-        });
-        html += "</ul></div>";
-      }
-      $("#scene-list").html(html);
+      $.getJSON(base + "scenes.json", function (data) {
+        let html = "";
+        for (const category in data) {
+          html += `<div class="category"><h2>${category}</h2><ul>`;
+          data[category].forEach(scene => {
+            html += `<li><a href="${base}play.html?scene=${scene.file}">${scene.name}</a></li>`;
+          });
+          html += "</ul></div>";
+        }
+        $("#scene-list").html(html);
+      });
     });
   </script>
 </body>

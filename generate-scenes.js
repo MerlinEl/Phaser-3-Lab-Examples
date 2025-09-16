@@ -3,8 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const SCENES_DIR = path.join(__dirname, "scenes");
-const OUTPUT_FILE = path.join(__dirname, "scenes.json");
+const scenesDir = path.join(__dirname, "scenes");
+const outputFile = path.join(__dirname, "docs", "scenes.json");
 
 // funkce na převod názvu souboru na hezký titulek
 function formatName(fileName) {
@@ -18,25 +18,30 @@ function formatName(fileName) {
         .join(" ");
 }
 
-// prettier-ignore
-// najdi všechny složky (kategorie)
-const categories = fs.readdirSync(SCENES_DIR).filter(file =>
-    fs.statSync(path.join(SCENES_DIR, file)).isDirectory()
-);
+function buildIndex() {
+    let categories = {};
 
-let result = {};
+    fs.readdirSync(scenesDir, { withFileTypes: true }).forEach((entry) => {
+        if (entry.isDirectory()) {
+            const catName = entry.name;
+            const catPath = path.join(scenesDir, catName);
 
-// prettier-ignore
-categories.forEach(category => {
-    const files = fs.readdirSync(path.join(SCENES_DIR, category))
-        .filter(file => file.endsWith(".js"));
+            const files = fs
+                .readdirSync(catPath)
+                .filter((f) => f.endsWith(".js"))
+                .map((f) => ({
+                    name: formatName(f),
+                    file: "scenes/" + catName + "/" + f,
+                }));
 
-    result[category] = files.map(file => ({
-        name: formatName(file),
-        file: `${category}/${file}`
-    }));
-});
+            if (files.length > 0) {
+                categories[catName] = files;
+            }
+        }
+    });
 
-fs.writeFileSync(OUTPUT_FILE, JSON.stringify(result, null, 4), "utf8");
+    fs.writeFileSync(outputFile, JSON.stringify(categories, null, 2));
+    console.log("✅ scenes.json vygenerován do", outputFile);
+}
 
-console.log("✅ scenes.json bylo vygenerováno!");
+buildIndex();
