@@ -1,12 +1,11 @@
 class CinemaCountdown extends Phaser.GameObjects.Container {
     running = false;
-    constructor(scene, x, y, textureKey, seconds = 3, onComplete = null, autoDestroy = true) {
+    constructor(scene, x, y, textureKey, seconds = 3, onComplete = null) {
         super(scene, x, y);
 
         this.scene = scene;
         this.seconds = seconds;
         this.onComplete = onComplete;
-        this.autoDestroy = autoDestroy;
         this.startTime = null; // nastaví se až při start()
 
         // obrázek
@@ -49,6 +48,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
     start() {
         this.startTime = this.scene.time.now;
         this.scene.events.on("update", this.onUpdate, this);
+        // Zamaskovat obrázek a kříž
         this.image.setMask(this.countdown_mask);
         this.cross.setMask(this.countdown_mask);
         this.running = true;
@@ -59,6 +59,18 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
         this.running = false;
         this.crossTween.paused = true; // zastaví blikání
         this.scene.events.off("update", this.onUpdate, this);
+    }
+
+    reset(seconds = this.seconds) {
+        this.stop();
+        // Odmaskovat obrázek a kříž
+        this.image.mask = null;
+        this.cross.mask = null;
+        this.image.setVisible(true);
+        this.cross.setVisible(true);
+        this.countdownText.setVisible(true);
+        this.seconds = seconds;
+        this.start();
     }
 
     onUpdate(time, delta) {
@@ -76,13 +88,10 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.countdown_graphics.fillStyle(0xffffff);
             this.countdown_graphics.slice(this.x, this.y, this.image.width / 2, Phaser.Math.DegToRad(-90), Phaser.Math.DegToRad(angle - 90), true);
             this.countdown_graphics.fillPath();
-
             this.countdownText.setText(remaining);
-            this.countdownText.setVisible(true);
         } else {
+            this.image.setVisible(false);
             this.countdownText.setVisible(false);
-            this.image.clearMask(true);
-            this.cross.clearMask(true);
             this.cross.setVisible(false);
 
             this.stop(); // odregistruje update + zastaví animace
@@ -90,10 +99,6 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.emit("complete");
             if (this.onComplete) {
                 this.onComplete();
-            }
-
-            if (this.autoDestroy) {
-                this.destroy();
             }
         }
     }
@@ -110,7 +115,6 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.crossTween.stop();
             this.crossTween.remove();
         }
-
         if (this.image) this.image.clearMask(true);
         if (this.cross) this.cross.clearMask(true);
 
@@ -122,9 +126,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.countdown_mask.destroy();
             this.countdown_mask = null;
         }
-
         this.scene.events.off("update", this.onUpdate, this);
-
         super.destroy(fromScene);
     }
 }

@@ -29,7 +29,7 @@ function create() {
     });
 
     // kliknutí myší spustí odpočet
-    this.input.once("pointerdown", () => {
-        countdown.start();
+    this.input.on("pointerdown", () => {
+        countdown.reset(); // odpočet se vždy restartuje
     });
 }
