@@ -27,14 +27,14 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
         // křížek
         this.cross = scene.add.graphics();
         this.drawCross(this.cross, this.image.width / 2 - 10);
-        this.cross.setAlpha(1);
+        this.cross.setAlpha(0.5);
         this.cross.setMask(this.mask);
         this.add(this.cross);
 
         // animace blikání křížku
         scene.tweens.add({
             targets: this.cross,
-            alpha: { from: 1, to: 0 },
+            alpha: { from: 0.5, to: 0 },
             duration: 500,
             yoyo: true,
             repeat: -1
