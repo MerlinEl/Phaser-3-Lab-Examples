@@ -1,3 +1,6 @@
+// Vytvoří seznam scén do "docs/scenes.json", které se spouštějí přes play.html
+// v terminále spusť: node generate-scenes.js
+
 const fs = require("fs");
 const path = require("path");
 

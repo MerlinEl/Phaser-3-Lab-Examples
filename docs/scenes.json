@@ -1,5 +1,5 @@
 {
-  "draw": [
+  "Draw": [
     {
       "name": "Cinema Count Down 01",
       "file": "scenes/draw/cinema_count_down_01.js"
@@ -49,7 +49,7 @@
       "file": "scenes/draw/path_ngon.js"
     }
   ],
-  "geometry": [
+  "Geometry": [
     {
       "name": "Matrix2D",
       "file": "scenes/geometry/Matrix2D.js"
@@ -63,7 +63,7 @@
       "file": "scenes/geometry/Painter2D.js"
     }
   ],
-  "particles": [
+  "Particles": [
     {
       "name": "Simple Fireworks 001",
       "file": "scenes/particles/Simple-Fireworks-001.js"
@@ -73,7 +73,7 @@
       "file": "scenes/particles/Simple-Fireworks-002.js"
     }
   ],
-  "shaders": [
+  "Shaders": [
     {
       "name": "Arcade Physics",
       "file": "scenes/shaders/arcade_physics.js"
@@ -147,7 +147,7 @@
       "file": "scenes/shaders/water_noise_image_01.js"
     }
   ],
-  "tweens": [
+  "Tweens": [
     {
       "name": "Tween Image Brightness 001",
       "file": "scenes/tweens/Tween-Image-Brightness-001.js"
