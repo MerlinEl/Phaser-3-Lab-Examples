@@ -4,12 +4,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const scenesDir = path.join(__dirname, "scenes");
-const outputFile = path.join(__dirname, "docs", "scenes.json");
-
-// převod názvu souboru nebo adresáře na hezký titulek
-function formatName(name) {
-    return name
+// funkce na převod názvu souboru na hezký titulek
+function formatName(fileName) {
+    return fileName
         .replace(".js", "")
         .replace(/[-_]/g, " ") // nahradí _ a - za mezery
         .replace(/\s+/g, " ") // odstraní dvojité mezery
@@ -19,30 +16,39 @@ function formatName(name) {
         .join(" ");
 }
 
-function buildIndex() {
-    let categories = {};
+const scenesDir = path.join(__dirname, "scenes");
+const outputFile = path.join(__dirname, "docs", "scenes.json");
+const docsSrcDir = path.join(__dirname, "docs", "src");
+const assetLoaderSrc = path.join(__dirname, "src", "assetLoader.js");
+const assetLoaderDest = path.join(docsSrcDir, "assetLoader.js");
 
-    fs.readdirSync(scenesDir, { withFileTypes: true }).forEach((entry) => {
-        if (entry.isDirectory()) {
-            const catName = formatName(entry.name); // formátovaný název kategorie
-            const catPath = path.join(scenesDir, entry.name);
+function generateScenesJSON() {
+    const categories = {};
 
-            const files = fs
-                .readdirSync(catPath)
-                .filter((f) => f.endsWith(".js"))
-                .map((f) => ({
-                    name: formatName(f),
-                    file: "scenes/" + entry.name + "/" + f, // odkaz zůstává podle původní složky
-                }));
-
-            if (files.length > 0) {
-                categories[catName] = files;
-            }
+    const categoriesDirs = fs.readdirSync(scenesDir);
+    categoriesDirs.forEach((category) => {
+        const categoryPath = path.join(scenesDir, category);
+        if (fs.statSync(categoryPath).isDirectory()) {
+            const files = fs.readdirSync(categoryPath).filter((f) => f.endsWith(".js"));
+            categories[category] = files.map((file) => ({
+                file: `scenes/${category}/${file}`,
+                name: formatName(file),
+            }));
         }
     });
 
     fs.writeFileSync(outputFile, JSON.stringify(categories, null, 2));
-    console.log("✅ scenes.json vygenerován do", outputFile);
+    console.log(`✅ Soubor scenes.json byl vygenerován: ${outputFile}`);
 }
 
-buildIndex();
+function copyAssetLoader() {
+    if (!fs.existsSync(docsSrcDir)) {
+        fs.mkdirSync(docsSrcDir, { recursive: true });
+    }
+    fs.copyFileSync(assetLoaderSrc, assetLoaderDest);
+    console.log(`✅ assetLoader.js zkopírován do: ${assetLoaderDest}`);
+}
+
+// spusť obě funkce
+generateScenesJSON();
+copyAssetLoader();

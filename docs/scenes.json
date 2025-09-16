@@ -1,164 +1,164 @@
 {
-  "Draw": [
+  "draw": [
     {
-      "name": "Cinema Count Down 01",
-      "file": "scenes/draw/cinema_count_down_01.js"
+      "file": "scenes/draw/cinema_count_down_01.js",
+      "name": "Cinema Count Down 01"
     },
     {
-      "name": "Cinema Count Down 02",
-      "file": "scenes/draw/cinema_count_down_02.js"
+      "file": "scenes/draw/cinema_count_down_02.js",
+      "name": "Cinema Count Down 02"
     },
     {
-      "name": "Cinema Count Down 03",
-      "file": "scenes/draw/cinema_count_down_03.js"
+      "file": "scenes/draw/cinema_count_down_03.js",
+      "name": "Cinema Count Down 03"
     },
     {
-      "name": "Draw 3d Star",
-      "file": "scenes/draw/draw_3d_star.js"
+      "file": "scenes/draw/draw_3d_star.js",
+      "name": "Draw 3d Star"
     },
     {
-      "name": "Draw Gradient Star 01",
-      "file": "scenes/draw/draw_gradient_star_01.js"
+      "file": "scenes/draw/draw_gradient_star_01.js",
+      "name": "Draw Gradient Star 01"
     },
     {
-      "name": "Draw Gradient Star 02",
-      "file": "scenes/draw/draw_gradient_star_02.js"
+      "file": "scenes/draw/draw_gradient_star_02.js",
+      "name": "Draw Gradient Star 02"
     },
     {
-      "name": "Draw Resized Dradient 01",
-      "file": "scenes/draw/draw_resized_dradient_01.js"
+      "file": "scenes/draw/draw_resized_dradient_01.js",
+      "name": "Draw Resized Dradient 01"
     },
     {
-      "name": "Draw Resized Dradient 02",
-      "file": "scenes/draw/draw_resized_dradient_02.js"
+      "file": "scenes/draw/draw_resized_dradient_02.js",
+      "name": "Draw Resized Dradient 02"
     },
     {
-      "name": "Draw Rotated Dradient 01",
-      "file": "scenes/draw/draw_rotated_dradient_01.js"
+      "file": "scenes/draw/draw_rotated_dradient_01.js",
+      "name": "Draw Rotated Dradient 01"
     },
     {
-      "name": "Draw Star 01",
-      "file": "scenes/draw/draw_star_01.js"
+      "file": "scenes/draw/draw_star_01.js",
+      "name": "Draw Star 01"
     },
     {
-      "name": "Image Scale 01",
-      "file": "scenes/draw/image_scale_01.js"
+      "file": "scenes/draw/image_scale_01.js",
+      "name": "Image Scale 01"
     },
     {
-      "name": "Path Ngon",
-      "file": "scenes/draw/path_ngon.js"
+      "file": "scenes/draw/path_ngon.js",
+      "name": "Path Ngon"
     }
   ],
-  "Geometry": [
+  "geometry": [
     {
-      "name": "Matrix2D",
-      "file": "scenes/geometry/Matrix2D.js"
+      "file": "scenes/geometry/Matrix2D.js",
+      "name": "Matrix2D"
     },
     {
-      "name": "Offset Image Pivot At Place",
-      "file": "scenes/geometry/offset_image_pivot_at_place.js"
+      "file": "scenes/geometry/offset_image_pivot_at_place.js",
+      "name": "Offset Image Pivot At Place"
     },
     {
-      "name": "Painter2D",
-      "file": "scenes/geometry/Painter2D.js"
+      "file": "scenes/geometry/Painter2D.js",
+      "name": "Painter2D"
     }
   ],
-  "Particles": [
+  "particles": [
     {
-      "name": "Simple Fireworks 001",
-      "file": "scenes/particles/Simple-Fireworks-001.js"
+      "file": "scenes/particles/Simple-Fireworks-001.js",
+      "name": "Simple Fireworks 001"
     },
     {
-      "name": "Simple Fireworks 002",
-      "file": "scenes/particles/Simple-Fireworks-002.js"
+      "file": "scenes/particles/Simple-Fireworks-002.js",
+      "name": "Simple Fireworks 002"
     }
   ],
-  "Shaders": [
+  "shaders": [
     {
-      "name": "Arcade Physics",
-      "file": "scenes/shaders/arcade_physics.js"
+      "file": "scenes/shaders/arcade_physics.js",
+      "name": "Arcade Physics"
     },
     {
-      "name": "Basic Texture Shader",
-      "file": "scenes/shaders/basic_texture_shader.js"
+      "file": "scenes/shaders/basic_texture_shader.js",
+      "name": "Basic Texture Shader"
     },
     {
-      "name": "Change Shader Texture 01",
-      "file": "scenes/shaders/change_shader_texture_01.js"
+      "file": "scenes/shaders/change_shader_texture_01.js",
+      "name": "Change Shader Texture 01"
     },
     {
-      "name": "Cinema Countdown 01",
-      "file": "scenes/shaders/cinema_countdown_01.js"
+      "file": "scenes/shaders/cinema_countdown_01.js",
+      "name": "Cinema Countdown 01"
     },
     {
-      "name": "Custom Pipeline 01",
-      "file": "scenes/shaders/custom_pipeline_01.js"
+      "file": "scenes/shaders/custom_pipeline_01.js",
+      "name": "Custom Pipeline 01"
     },
     {
-      "name": "Custom Pipeline 02",
-      "file": "scenes/shaders/custom_pipeline_02.js"
+      "file": "scenes/shaders/custom_pipeline_02.js",
+      "name": "Custom Pipeline 02"
     },
     {
-      "name": "Load Shader 01",
-      "file": "scenes/shaders/load_shader_01.js"
+      "file": "scenes/shaders/load_shader_01.js",
+      "name": "Load Shader 01"
     },
     {
-      "name": "Pacman 01",
-      "file": "scenes/shaders/pacman_01.js"
+      "file": "scenes/shaders/pacman_01.js",
+      "name": "Pacman 01"
     },
     {
-      "name": "Save Shader As Texture",
-      "file": "scenes/shaders/save_shader_as_texture.js"
+      "file": "scenes/shaders/save_shader_as_texture.js",
+      "name": "Save Shader As Texture"
     },
     {
-      "name": "Shaders Bundle 01",
-      "file": "scenes/shaders/shaders_bundle_01.js"
+      "file": "scenes/shaders/shaders_bundle_01.js",
+      "name": "Shaders Bundle 01"
     },
     {
-      "name": "Shader As Mask 01",
-      "file": "scenes/shaders/shader_as_mask_01.js"
+      "file": "scenes/shaders/shader_as_mask_01.js",
+      "name": "Shader As Mask 01"
     },
     {
-      "name": "Shader As Mask 02",
-      "file": "scenes/shaders/shader_as_mask_02.js"
+      "file": "scenes/shaders/shader_as_mask_02.js",
+      "name": "Shader As Mask 02"
     },
     {
-      "name": "Shader Mask Circle 01",
-      "file": "scenes/shaders/shader_mask_circle_01.js"
+      "file": "scenes/shaders/shader_mask_circle_01.js",
+      "name": "Shader Mask Circle 01"
     },
     {
-      "name": "Shader Transform 01",
-      "file": "scenes/shaders/shader_transform_01.js"
+      "file": "scenes/shaders/shader_transform_01.js",
+      "name": "Shader Transform 01"
     },
     {
-      "name": "Tint Pipeline 01",
-      "file": "scenes/shaders/tint_pipeline_01.js"
+      "file": "scenes/shaders/tint_pipeline_01.js",
+      "name": "Tint Pipeline 01"
     },
     {
-      "name": "Water Noise Background 01",
-      "file": "scenes/shaders/water_noise_background_01.js"
+      "file": "scenes/shaders/water_noise_background_01.js",
+      "name": "Water Noise Background 01"
     },
     {
-      "name": "Water Noise Container 01",
-      "file": "scenes/shaders/water_noise_container_01.js"
+      "file": "scenes/shaders/water_noise_container_01.js",
+      "name": "Water Noise Container 01"
     },
     {
-      "name": "Water Noise Image 01",
-      "file": "scenes/shaders/water_noise_image_01.js"
+      "file": "scenes/shaders/water_noise_image_01.js",
+      "name": "Water Noise Image 01"
     }
   ],
-  "Tweens": [
+  "tweens": [
     {
-      "name": "Tween Image Brightness 001",
-      "file": "scenes/tweens/Tween-Image-Brightness-001.js"
+      "file": "scenes/tweens/Tween-Image-Brightness-001.js",
+      "name": "Tween Image Brightness 001"
     },
     {
-      "name": "Tween Image Brightness 002",
-      "file": "scenes/tweens/Tween-Image-Brightness-002.js"
+      "file": "scenes/tweens/Tween-Image-Brightness-002.js",
+      "name": "Tween Image Brightness 002"
     },
     {
-      "name": "Tween Image Brightness 003",
-      "file": "scenes/tweens/Tween-Image-Brightness-003.js"
+      "file": "scenes/tweens/Tween-Image-Brightness-003.js",
+      "name": "Tween Image Brightness 003"
     }
   ]
 }
