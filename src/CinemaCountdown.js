@@ -13,14 +13,14 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
 
         // graphics pro masku
         this.graphics = scene.make.graphics({ x: 0, y: 0, add: false });
-        this.mask = this.graphics.createGeometryMask();
-        this.image.setMask(this.mask);
+        const radial_mask = this.graphics.createGeometryMask();
+        this.image.setMask(radial_mask);
 
         // křížek – uvnitř obrázku
         this.cross = scene.add.graphics();
         this.drawCross(this.cross, this.image.width / 2 - 10);
         this.cross.setAlpha(0.5);
-        this.cross.setMask(this.mask);
+        this.cross.setMask(radial_mask);
         this.add(this.cross);
 
         // animace blikání křížku
