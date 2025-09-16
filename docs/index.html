@@ -17,38 +17,64 @@
 </head>
 <body>
   <h1>Mini Phaser Labs</h1>
+
+  <div style="text-align:center; margin-bottom: 20px;">
+    <label>
+      <input type="checkbox" id="toggleLabs" />
+      Používat labs.phaser.io
+    </label>
+  </div>
+
   <div id="scene-list"></div>
 
   <script>
-
     const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
-    const BASE_URL = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
+    const BASE_URL =
+      "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
 
-    $(function(){
-      $.getJSON("scenes.json", function(data){
-        let html = "";
-        let first = true; // první kategorie má být otevřená
-        for (const category in data) {
-          const openAttr = first ? " open" : "";
-          html += `
-            <details${openAttr}>
-              <summary><strong>${category}</strong></summary>
-              <ul>`;
-          data[category].forEach(scene => {
-            const url = (location.hostname === "localhost" || location.protocol === "file:")
-              ? `play.html?scene=${scene.file}`
-              : `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
-            html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
-          });
-          html += `
-              </ul>
-            </details>`;
-          first = false; // jen první kategorie otevřená
-        }
-        $("#scene-list").html(html);
+    $(function () {
+      $.getJSON("scenes.json", function (data) {
+        renderSceneList(data);
+
+        // přegenerovat seznam při změně toggle
+        $("#toggleLabs").on("change", function () {
+          renderSceneList(data);
+        });
       });
     });
+
+    function renderSceneList(data) {
+      let html = "";
+      let first = true;
+      const IS_LOCAL =
+        location.hostname === "localhost" || location.protocol === "file:";
+      const useLabs = $("#toggleLabs").is(":checked");
+
+      for (const category in data) {
+        const openAttr = first ? " open" : "";
+        html += `
+          <details${openAttr}>
+            <summary><strong>${category}</strong></summary>
+            <ul>`;
+        data[category].forEach((scene) => {
+          let url;
+          if (useLabs && !IS_LOCAL) {
+            url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`;
+          } else {
+            url = `play.html?scene=${scene.file}`;
+          }
+
+          html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
+        });
+        html += `
+            </ul>
+          </details>`;
+        first = false;
+      }
+      $("#scene-list").html(html);
+    }
   </script>
 </body>
 </html>
-<script>
+  <script>
+
