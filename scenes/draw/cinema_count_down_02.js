@@ -79,6 +79,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.image.clearMask(true);
             this.cross.clearMask(true);
             this.cross.setVisible(false);
+            this.image.setVisible(false);
 
             this.running = false;
             this.emit("complete");
