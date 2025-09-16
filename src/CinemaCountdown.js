@@ -16,15 +16,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
         this.mask = this.graphics.createGeometryMask();
         this.image.setMask(this.mask);
 
-        // text odpočtu
-        this.countdownText = scene.add.text(0, 0, seconds, {
-            fontSize: '128px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-        this.add(this.countdownText);
-
-        // křížek
+        // křížek – uvnitř obrázku
         this.cross = scene.add.graphics();
         this.drawCross(this.cross, this.image.width / 2 - 10);
         this.cross.setAlpha(0.5);
@@ -39,6 +31,14 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             yoyo: true,
             repeat: -1
         });
+
+        // text odpočtu (bez masky!)
+        this.countdownText = scene.add.text(0, 0, seconds, {
+            fontSize: '128px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+        this.add(this.countdownText); // přidáme, aby držel pozici, ale masku nemá
 
         scene.add.existing(this);
         this.startTime = scene.time.now;
@@ -71,7 +71,6 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.cross.clearMask(true);
             this.cross.setVisible(false);
 
-            // Event i callback
             this.emit("complete");
             if (this.onComplete) {
                 this.onComplete();
