@@ -1,3 +1,101 @@
+class CinemaCountdown extends Phaser.GameObjects.Container {
+    running = false;
+    cross_tween;
+    mask_tween;
+    constructor(scene, x, y, textureKey, seconds = 3, onComplete = null) {
+        super(scene, x, y);
+
+        this.scene = scene;
+        this.seconds = seconds;
+        this.startTime = null;
+        this.onComplete = onComplete;
+
+        // obrázek, který bude maskovaný
+        this.image = scene.add.image(0, 0, textureKey);
+        this.add(this.image);
+
+        // graphics pro masku
+        this.countdown_graphics = scene.make.graphics({ x: 0, y: 0, add: false });
+        this.countdown_mask = this.countdown_graphics.createGeometryMask();
+
+        // křížek – uvnitř obrázku
+        this.cross = scene.add.graphics();
+        this.drawCross(this.cross, this.image.width / 2 - 10);
+        this.cross.setAlpha(0.5);
+        this.add(this.cross);
+
+        // animace blikání křížku
+        this.cross_tween = scene.tweens.add({
+            targets: this.cross,
+            alpha: { from: 0.5, to: 0 },
+            duration: 500,
+            yoyo: true,
+            repeat: -1,
+            paused: true,
+        });
+
+        // text odpočtu (bez masky!)
+        this.countdownText = scene.add
+            .text(0, 0, seconds, {
+                fontSize: "128px",
+                color: "#ffffff",
+                fontStyle: "bold",
+            })
+            .setOrigin(0.5);
+        this.add(this.countdownText);
+
+        scene.add.existing(this);
+        this.startTime = scene.time.now;
+    }
+    start() {
+        this.image.setMask(this.countdown_mask);
+        this.cross.setMask(this.countdown_mask);
+        this.running = true;
+        this.cross_tween.paused = false;
+    }
+    stop() {
+        this.running = false;
+        this.cross_tween.paused = true;
+    }
+    update(time, delta) {
+        if (!this.running) return;
+        let elapsed = (time - this.startTime) / 1000;
+        let remaining = Math.ceil(this.seconds - elapsed);
+
+        this.countdown_graphics.clear();
+
+        if (remaining > 0) {
+            let progress = Phaser.Math.Clamp(elapsed / this.seconds, 0, 1);
+            let angle = Phaser.Math.Linear(0, 360, progress);
+
+            this.countdown_graphics.fillStyle(0xffffff);
+            this.countdown_graphics.slice(this.x, this.y, this.image.width / 2, Phaser.Math.DegToRad(-90), Phaser.Math.DegToRad(angle - 90), true);
+            this.countdown_graphics.fillPath();
+
+            this.countdownText.setText(remaining);
+            this.countdownText.setVisible(true);
+        } else {
+            this.countdownText.setVisible(false);
+            this.image.clearMask(true);
+            this.cross.clearMask(true);
+            this.cross.setVisible(false);
+
+            this.running = false;
+            this.emit("complete");
+            if (this.onComplete) {
+                this.onComplete();
+            }
+        }
+    }
+
+    drawCross(g, size) {
+        g.clear();
+        g.lineStyle(4, 0xffffff, 1);
+        g.lineBetween(0, -size, 0, size);
+        g.lineBetween(-size, 0, size, 0);
+    }
+}
+
 var config = {
     type: Phaser.WEBGL,
     width: 800,
@@ -20,7 +118,6 @@ function preload() {
     }
     this.load.image("bg", "/assets/images/purple-dots.png");
     this.load.image("timer_image", "/assets/images/timer_bg_01.png");
-    this.load.script("CinemaCountdown", "/src/CinemaCountdown.js");
 }
 
 function create() {
@@ -31,9 +128,10 @@ function create() {
         console.log("Odpočet skončil → spusť hru!");
         // např. this.scene.start('GameScene');
     });
+    countdown.start();
 
     // varianta B: poslouchám událost
-    countdown.on("complete", () => {
+    countdown.once("complete", () => {
         console.log("Event complete zachycený!");
     });
 }
