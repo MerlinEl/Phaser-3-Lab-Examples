@@ -33,7 +33,7 @@
     location.hostname === "127.0.0.1" ||
     location.protocol === "file:";
 
-  let useLabs = false; // výchozí režim = Play
+  let useLabs = !IS_LOCAL; // 🔹 na GitHubu bude rovnou "Labs", lokálně "Play"
 
   function updateStatus() {
     $("#toggle-mode").text(`Režim: ${useLabs ? "Labs" : "Play"}`);
@@ -78,6 +78,15 @@
   $(function () {
     $("#toggle-mode").on("click", toggleMode);
     updateStatus();
+    renderSceneList();
+  });
+  
+  $(function () {
+  if (!IS_LOCAL) {
+      $("#toggle-mode").hide(); // tlačítko se nezobrazí na GitHub Pages
+    } else {
+      $("#toggle-mode").on("click", toggleMode);
+    }
     renderSceneList();
   });
 </script>
