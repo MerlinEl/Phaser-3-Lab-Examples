@@ -1,13 +1,14 @@
 class CinemaCountdown extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, textureKey, seconds = 3, onComplete = null) {
+    constructor(scene, x, y, textureKey, seconds = 3, onComplete = null, autoDestroy = true) {
         super(scene, x, y);
 
         this.scene = scene;
         this.seconds = seconds;
         this.onComplete = onComplete;
+        this.autoDestroy = autoDestroy;
         this.startTime = scene.time.now;
 
-        // obrázek, který budeme maskovat
+        // obrázek
         this.image = scene.add.image(0, 0, textureKey);
         this.add(this.image);
 
@@ -32,7 +33,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             repeat: -1
         });
 
-        // text odpočtu
+        // text odpočtu (bez masky)
         this.countdownText = scene.add.text(0, 0, seconds, {
             fontSize: '128px',
             color: '#ffffff',
@@ -40,7 +41,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
         this.add(this.countdownText);
 
-        // zaregistrovat vlastní update
+        // registrace na update loop scény
         scene.events.on('update', this.onUpdate, this);
 
         scene.add.existing(this);
@@ -73,7 +74,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             this.cross.clearMask(true);
             this.cross.setVisible(false);
 
-            // vyčistit posluchač update, ať neběží navždy
+            // odregistrovat update
             this.scene.events.off('update', this.onUpdate, this);
 
             this.emit("complete");
@@ -81,8 +82,9 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
                 this.onComplete();
             }
 
-            // volitelně i auto-destroy
-            // this.destroy();
+            if (this.autoDestroy) {
+                this.destroy();
+            }
         }
     }
 
