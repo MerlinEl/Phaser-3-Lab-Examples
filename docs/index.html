@@ -76,16 +76,11 @@
   }
 
   $(function () {
-    $("#toggle-mode").on("click", toggleMode);
-    updateStatus();
-    renderSceneList();
-  });
-  
-  $(function () {
-  if (!IS_LOCAL) {
-      $("#toggle-mode").hide(); // tlačítko se nezobrazí na GitHub Pages
+    if (!IS_LOCAL) {
+      $("#toggle-mode").hide(); // na GitHubu schováme tlačítko
     } else {
       $("#toggle-mode").on("click", toggleMode);
+      updateStatus();
     }
     renderSceneList();
   });
