@@ -1,14 +1,12 @@
-// v terminále spusť: node generate-scenes.js
-
 const fs = require("fs");
 const path = require("path");
 
 const scenesDir = path.join(__dirname, "scenes");
 const outputFile = path.join(__dirname, "docs", "scenes.json");
 
-// funkce na převod názvu souboru na hezký titulek
-function formatName(fileName) {
-    return fileName
+// převod názvu souboru nebo adresáře na hezký titulek
+function formatName(name) {
+    return name
         .replace(".js", "")
         .replace(/[-_]/g, " ") // nahradí _ a - za mezery
         .replace(/\s+/g, " ") // odstraní dvojité mezery
@@ -23,15 +21,15 @@ function buildIndex() {
 
     fs.readdirSync(scenesDir, { withFileTypes: true }).forEach((entry) => {
         if (entry.isDirectory()) {
-            const catName = entry.name;
-            const catPath = path.join(scenesDir, catName);
+            const catName = formatName(entry.name); // formátovaný název kategorie
+            const catPath = path.join(scenesDir, entry.name);
 
             const files = fs
                 .readdirSync(catPath)
                 .filter((f) => f.endsWith(".js"))
                 .map((f) => ({
                     name: formatName(f),
-                    file: "scenes/" + catName + "/" + f,
+                    file: "scenes/" + entry.name + "/" + f, // odkaz zůstává podle původní složky
                 }));
 
             if (files.length > 0) {

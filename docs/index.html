@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Mini Phaser Labs</title>
   <style>
     body { font-family: sans-serif; background:#f4f4f4; margin:20px; }
@@ -19,16 +19,20 @@
   <div id="scene-list"></div>
 
   <script>
-    $(function () {
-      // base path = vždy složka doc/
-      const base = "./";
+    const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
+    const BASE_URL = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
 
-      $.getJSON(base + "scenes.json", function (data) {
+    $(function(){
+      $.getJSON("scenes.json", function(data){
         let html = "";
         for (const category in data) {
           html += `<div class="category"><h2>${category}</h2><ul>`;
           data[category].forEach(scene => {
-            html += `<li><a href="${base}play.html?scene=${scene.file}">${scene.name}</a></li>`;
+            const url = (location.hostname === "localhost" || location.protocol === "file:")
+              ? `play.html?scene=${scene.file}`
+              : `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`; 
+              // Date.now() = cache buster
+            html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
           });
           html += "</ul></div>";
         }
