@@ -42,14 +42,14 @@ function generateScenesJSON() {
     console.log(`✅ Soubor scenes.json byl vygenerován: ${outputFile}`);
 }
 // zkopíruje assetLoader.js do složky docs/src/
-function copyAssetLoader() {
-    if (!fs.existsSync(docsSrcDir)) {
-        fs.mkdirSync(docsSrcDir, { recursive: true });
-    }
-    fs.copyFileSync(assetLoaderSrc, assetLoaderDest);
-    console.log(`✅ assetLoader.js zkopírován do: ${assetLoaderDest}`);
-}
+// function copyAssetLoader() {
+//     if (!fs.existsSync(docsSrcDir)) {
+//         fs.mkdirSync(docsSrcDir, { recursive: true });
+//     }
+//     fs.copyFileSync(assetLoaderSrc, assetLoaderDest);
+//     console.log(`✅ assetLoader.js zkopírován do: ${assetLoaderDest}`);
+// }
 
 // spusť obě funkce
 generateScenesJSON();
-copyAssetLoader();
+// copyAssetLoader();
