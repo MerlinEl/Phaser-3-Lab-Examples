@@ -2,12 +2,12 @@ var config = {
     type: Phaser.WEBGL,
     width: 800,
     height: 600,
-    parent: 'phaser-example',
+    parent: "phaser-example",
     scene: {
         preload: preload,
         create: create,
-        update: update
-    }
+        update: update,
+    },
 };
 
 var game = new Phaser.Game(config);
@@ -22,31 +22,36 @@ let totalSeconds = 3;
 let startTime;
 
 function preload() {
-    this.load.setBaseURL('https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/assets');
-    this.load.image('bg', '/images/purple-dots.png');
-    this.load.image('timer_image', "/images/timer_bg_01.png");
+    const IS_LOCAL = location.hostname === "localhost" || location.protocol === "file:";
+    if (!IS_LOCAL) {
+        this.load.setBaseURL("https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main");
+    }
+    this.load.image("bg", "/assets/images/purple-dots.png");
+    this.load.image("timer_image", "/assets/images/timer_bg_01.png");
 }
 
 function create() {
     // pozadí
-    this.add.image(400, 300, 'bg');
+    this.add.image(400, 300, "bg");
 
     // obrázek, který budeme maskovat
-    img = this.add.image(400, 300, 'timer_image');
+    img = this.add.image(400, 300, "timer_image");
 
     // graphics pro masku
-    graphics = this.make.graphics({x:0, y:0, add:false});
+    graphics = this.make.graphics({ x: 0, y: 0, add: false });
     mask = graphics.createGeometryMask();
 
     // nastavíme masku na oba objekty
     img.setMask(mask);
 
     // text odpočtu
-    countdownText = this.add.text(400, 300, totalSeconds, {
-        fontSize: '128px',
-        color: '#ffffff',
-        fontStyle: 'bold'
-    }).setOrigin(0.5);
+    countdownText = this.add
+        .text(400, 300, totalSeconds, {
+            fontSize: "128px",
+            color: "#ffffff",
+            fontStyle: "bold",
+        })
+        .setOrigin(0.5);
 
     // křížek – kratší, aby byl uvnitř timer_image
     cross = this.add.graphics();
@@ -60,7 +65,7 @@ function create() {
         alpha: { from: 0.5, to: 0 },
         duration: 500,
         yoyo: true,
-        repeat: -1
+        repeat: -1,
     });
 
     startTime = this.time.now;
@@ -79,7 +84,9 @@ function update(time, delta) {
 
         graphics.fillStyle(0xffffff);
         graphics.slice(
-            400, 300, 300, // poloměr masky držíme velký
+            400,
+            300,
+            300, // poloměr masky držíme velký
             Phaser.Math.DegToRad(-90),
             Phaser.Math.DegToRad(angle - 90),
             true

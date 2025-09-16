@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Phaser Scene Player</title>
+  <style>
+    body { margin: 0; background: #222; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+<body>
+  <div id="phaser-example"></div>
+
+  <script>
+    // zjistíme, který soubor máme načíst z URL
+    const params = new URLSearchParams(window.location.search);
+    const sceneFile = params.get("scene");
+
+    if (sceneFile) {
+      const script = document.createElement("script");
+      script.src = "scenes/" + sceneFile;
+      document.body.appendChild(script);
+
+      script.onload = () => {
+        // předpokládáme, že každá scéna má class s názvem = jménu souboru
+        const sceneClassName = sceneFile.replace(".js", "");
+        const SceneClass = window[sceneClassName] || window.defaultScene;
+
+        const config = {
+          type: Phaser.WEBGL,
+          width: 800,
+          height: 600,
+          parent: "phaser-example",
+          scene: SceneClass
+        };
+
+        new Phaser.Game(config);
+      };
+    } else {
+      document.body.innerHTML = "<h2>Žádná scéna není vybraná!</h2>";
+    }
+  </script>
+</body>
+</html>

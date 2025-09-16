@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Phaser Labs</title>
+  <style>
+    body { font-family: sans-serif; background:#f4f4f4; margin:20px; }
+    h1 { text-align:center; }
+    .category { margin:20px 0; }
+    ul { list-style:none; padding:0; }
+    li { margin:6px 0; }
+    a { text-decoration:none; color:#0077cc; }
+    a:hover { text-decoration:underline; }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <h1>Mini Phaser Labs</h1>
+  <div id="scene-list"></div>
+
+  <script>
+    $(function(){
+      $.getJSON("scenes.json", function(data){
+        let html = "";
+        for (const category in data) {
+          html += `<div class="category"><h2>${category}</h2><ul>`;
+          data[category].forEach(scene => {
+            html += `<li><a href="play.html?scene=${scene.file}">${scene.name}</a></li>`;
+          });
+          html += "</ul></div>";
+        }
+        $("#scene-list").html(html);
+      });
+    });
+  </script>
+</body>
+</html>

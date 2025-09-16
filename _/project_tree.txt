@@ -1,0 +1,13 @@
+Phaser-3-Lab-Examples/
+ ├─ assets/
+ │   ├─ images
+ |   |   ├─ timer_bg_01.png
+ │   └─ particles
+ ├─ scenes/
+ │   ├─ draw
+ |   │   ├─ draw_star_01.js
+ │   |   └─ cinema_count_down_03.js
+ |   ├─ geometry
+ |   ├─ particles
+ │   └─ shaders
+ └─ src/
