@@ -1,27 +1,5 @@
 ---
 name: pacman
-type: vertex
----
-
-precision mediump float;
-
-uniform mat4 uProjectionMatrix;
-uniform mat4 uViewMatrix;
-uniform vec2 resolution;
-
-attribute vec2 inPosition;
-
-varying vec2 fragCoord;
-
-void main(void) {
-    gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);
-
-    // Přepočet na pixelové souřadnice
-    fragCoord = inPosition;
-}
-
----
-name: pacman
 type: fragment
 uniform.duration: { "type": "1f", "value": 3000 } 
 ---
