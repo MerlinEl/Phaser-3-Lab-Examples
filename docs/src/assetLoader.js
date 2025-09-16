@@ -14,35 +14,31 @@
         ]);
     }
 */
-const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
+(function (global) {
+    const IS_LOCAL = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
 
-// base URL pro vzdálený repozitář
-const REMOTE_BASE = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
+    const REMOTE_BASE = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
 
-// načte jeden asset
-function loadAsset(scene, key, path, type = "image") {
-    const localPath = "../" + path;
-    const remotePath = REMOTE_BASE + path;
-
-    if (IS_LOCAL) {
-        scene.load[type](key, localPath);
-    } else {
-        scene.load[type](key, remotePath);
+    function loadAsset(scene, key, path, type = "image") {
+        const localPath = "../" + path;
+        const remotePath = REMOTE_BASE + path;
+        if (IS_LOCAL) {
+            scene.load[type](key, localPath);
+        } else {
+            scene.load[type](key, remotePath);
+        }
     }
-}
 
-// načte více assetů najednou
-function loadAssets(scene, assets = []) {
-    assets.forEach(({ key, path, type = "image" }) => {
-        loadAsset(scene, key, path, type);
-    });
-}
+    function loadAssets(scene, assets) {
+        assets.forEach((asset) => loadAsset(scene, asset.key, asset.path, asset.type || "image"));
+    }
 
-// zpřístupnění pod jedním jménem
-window.AssetUtils = {
-    loadAsset,
-    loadAssets,
-};
+    // zpřístupnit globálně
+    global.AssetUtils = {
+        loadAsset,
+        loadAssets,
+    };
+})(window);
 
 /*
  * starý způsob load by type
