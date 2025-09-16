@@ -38,7 +38,7 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
             color: '#ffffff',
             fontStyle: 'bold'
         }).setOrigin(0.5);
-        this.add(this.countdownText); // přidáme, aby držel pozici, ale masku nemá
+        this.add(this.countdownText);
 
         scene.add.existing(this);
         this.startTime = scene.time.now;
