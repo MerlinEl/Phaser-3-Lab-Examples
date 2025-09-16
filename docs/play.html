@@ -12,37 +12,48 @@
   </style>
 </head>
 <body>
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const sceneFile = urlParams.get("scene");
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const sceneFile = urlParams.get("scene");
 
-    if (!sceneFile) {
-      document.body.innerHTML = "<h2>Chybí parametr ?scene=</h2>";
-    } else {
-      const script = document.createElement("script");
-      script.src = "../" + sceneFile + `?v=${Date.now()}`;
-      script.onload = () => {
-        // --- Styl: class extends Phaser.Scene ---
-        // vytvořit scénu: class Scene1 extends Phaser.Scene {}
-        // na konci přidat: window.currentScene = Scene1;
-        if (typeof window.currentScene !== "undefined") {
-          const config = {
-            type: Phaser.AUTO,
-            width: 800,
-            height: 600,
-            backgroundColor: "#222",
-            scene: window.currentScene
-          };
-          new Phaser.Game(config);
-        } else if (typeof window.game !== "undefined") {
-          // --- Styl: var game = new Phaser.Game(config) ---
-          console.log("Scéna si spustila vlastní hru:", sceneFile);
+      const IS_LOCAL = location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1" ||
+        location.protocol === "file:";
+
+      if (!sceneFile) {
+        document.body.innerHTML = "<h2>Chybí parametr ?scene=</h2>";
+      } else {
+        const script = document.createElement("script");
+        if (IS_LOCAL) {
+          // Lokálně taháme ze složky scenes/
+          script.src = "../" + sceneFile + `?v=${Date.now()}`;
         } else {
-          console.error("Scéna se nenačetla správně:", sceneFile);
+          // Na GitHub Pages taháme z raw.githubusercontent
+          script.src = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/"
+            + sceneFile + `?v=${Date.now()}`;
         }
-      };
-      document.body.appendChild(script);
-    }
-  </script>
+        script.onload = () => {
+          // --- Styl: class extends Phaser.Scene ---
+          // vytvořit scénu: class Scene1 extends Phaser.Scene {}
+          // na konci přidat: window.currentScene = Scene1;
+          if (typeof window.currentScene !== "undefined") {
+            const config = {
+              type: Phaser.AUTO,
+              width: 800,
+              height: 600,
+              backgroundColor: "#222",
+              scene: window.currentScene
+            };
+            new Phaser.Game(config);
+          } else if (typeof window.game !== "undefined") {
+            // --- Styl: var game = new Phaser.Game(config) ---
+            console.log("Scéna si spustila vlastní hru:", sceneFile);
+          } else {
+            console.error("Scéna se nenačetla správně:", sceneFile);
+          }
+        };
+        document.body.appendChild(script);
+      }
+    </script>
 </body>
 </html>
