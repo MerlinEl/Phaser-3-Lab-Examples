@@ -12,15 +12,15 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
         this.add(this.image);
 
         // graphics pro masku
-        this.graphics = scene.make.graphics({ x: 0, y: 0, add: false });
-        const radial_mask = this.graphics.createGeometryMask();
-        this.image.setMask(radial_mask);
+        this.countdown_graphics = scene.make.graphics({ x: 0, y: 0, add: false });
+        this.countdown_mask = this.countdown_graphics.createGeometryMask();
+        this.image.setMask(this.countdown_mask);
 
         // křížek – uvnitř obrázku
         this.cross = scene.add.graphics();
         this.drawCross(this.cross, this.image.width / 2 - 10);
         this.cross.setAlpha(0.5);
-        this.cross.setMask(radial_mask);
+        this.cross.setMask(this.countdown_mask);
         this.add(this.cross);
 
         // animace blikání křížku
@@ -48,20 +48,20 @@ class CinemaCountdown extends Phaser.GameObjects.Container {
         let elapsed = (time - this.startTime) / 1000;
         let remaining = Math.ceil(this.seconds - elapsed);
 
-        this.graphics.clear();
+        this.countdown_graphics.clear();
 
         if (remaining > 0) {
             let progress = Phaser.Math.Clamp(elapsed / this.seconds, 0, 1);
             let angle = Phaser.Math.Linear(0, 360, progress);
 
-            this.graphics.fillStyle(0xffffff);
-            this.graphics.slice(
+            this.countdown_graphics.fillStyle(0xffffff);
+            this.countdown_graphics.slice(
                 this.x, this.y, this.image.width / 2,
                 Phaser.Math.DegToRad(-90),
                 Phaser.Math.DegToRad(angle - 90),
                 true
             );
-            this.graphics.fillPath();
+            this.countdown_graphics.fillPath();
 
             this.countdownText.setText(remaining);
             this.countdownText.setVisible(true);
