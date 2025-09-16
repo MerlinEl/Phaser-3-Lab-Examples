@@ -1,117 +1,39 @@
 <!DOCTYPE HTML>
-<HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Phaser Labs</title>
+  <style>
+    body { font-family: sans-serif; background:#f4f4f4; margin:20px; }
+    h1 { text-align:center; }
+    .category { margin:20px 0; }
+    ul { list-style:none; padding:0; }
+    li { margin:6px 0; }
+    a { text-decoration:none; color:#0077cc; }
+    a:hover { text-decoration:underline; }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <h1>Mini Phaser Labs (GitHub Index)</h1>
+  <div id="scene-list"></div>
 
-<HEAD>
-	<META CHARSET="UTF-8">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" charset="UTF-8" type="text/javascript"></script>
-	<style type="text/css">
-		* {
-			box-sizing: border-box;
-		}
+  <script>
+    const LABS_URL = "https://labs.phaser.io/3.55/edit.html?src=";
+    const BASE_URL = "https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/";
 
-		header {
-			background-color: lightblue;
-			text-align: center;
-			padding: 2px;
-			font-size: 25px;
-			color: white;
-		}
-
-		h1 {
-			color: rgb(43, 102, 123);
-		}
-
-		nav {
-			float: left;
-			width: 30%;
-			height: 300px;
-			background: #fff;
-			padding: 20px;
-		}
-
-		nav ul {
-			list-style-type: none;
-			padding: 10;
-		}
-
-		article {
-			float: left;
-			padding: 20px;
-			width: 70%;
-			background-color: #ebebf5;
-			height: 300px;
-		}
-
-		footer {
-			background-color: lightblue;
-			padding: 10px;
-			text-align: center;
-			color: white;
-		}
-
-		section::after {
-			content: "";
-			display: table;
-			clear: both;
-		}
-	</style>
-	<script type="text/javascript">
-		function hello() {
-			alert("hello javascript user");
-		}  
-	</script>
-</HEAD>
-<!-- prettier-ignore -->
-<BODY>
-	<header>
-		<h2>Phaser 3 Lab</h2>
-	</header>
-	<section>
-		<article>
-			<h1>Draw</h1>
-			<ul>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/draw/cinema_count_down_01.js?123">Cinema Countdown 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/draw/cinema_count_down_02.js?123">Cinema Countdown 02</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/draw/cinema_count_down_03.js?123">Cinema Countdown 03</a></li>
-			</ul>
-			<h1>Gradients</h1>
-			<ul>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/draw/cinema_count_down_01.js?123">Draw Rotated Gradient 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/draw/draw_resized_dradient_01.js?124">Draw Resized Gradient 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/draw/draw_resized_dradient_02.js?123">Draw Resized Gradient 02</a></li>
-			</ul>
-			<h1>Test Shaders</h1>
-			<ul>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/pacman_01.js?123">Pacman 01</a></li>
-			</ul>
-			<h1>Shaders</h1>
-			<ul>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/basic_texture_shader.js?123">Basic Testure Shader</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/load_shader_01.js?123">Load Shader</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/change_shader_texture_01.js?123">Change Shaders</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/shader_as_mask_01.js?123">Shader As Mask 1</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/shader_as_mask_02.js?123">Shader As Mask 2</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/save_shader_as_texture.js?123">Save Shader As Texture</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/shaders_bundle_01.js?123">Shaders Bundle</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/shader_transform_01.js?123">Shader Transform</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/arcade_physics.js?123">Shader Arcade Physics 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/cinema_countdown_01.js?123">Cinema Countdown 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/shader_mask_circle_01.js?123">Mask Circle 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/water_noise_background_01.js?123">Water Noise Background 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/water_noise_container_01.js?123">Water Noise Container 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/water_noise_image_01.js?123">Water Noise Image 01</a></li>
-			</ul>
-
-			<h1>Pipelines</h1>
-			<ul>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/tint_pipeline_01.js?123">Tint Pipeline 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/custom_pipeline_01.js?123">Custom Pipeline 01</a></li>
-				<li><a href="https://labs.phaser.io/3.55/edit.html?src=https://raw.githubusercontent.com/MerlinEl/Phaser-3-Lab-Examples/main/scenes/shaders/custom_pipeline_02.js?123">Custom Pipeline 02</a></li>
-			</ul>
-		</article>
-	</section>
-	<footer>
-	</footer>
-</BODY>
-
-</HTML>
+    $.getJSON("scenes.json", function(data){
+      let html = "";
+      for (const category in data) {
+        html += `<div class="category"><h2>${category}</h2><ul>`;
+        data[category].forEach(scene => {
+          const url = `${LABS_URL}${BASE_URL}${scene.file}?${Date.now()}`; // cache-busting
+          html += `<li><a href="${url}" target="_blank">${scene.name}</a></li>`;
+        });
+        html += "</ul></div>";
+      }
+      $("#scene-list").html(html);
+    });
+  </script>
+</body>
+</html>
