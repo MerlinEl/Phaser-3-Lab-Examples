@@ -30,7 +30,8 @@ function generateScenesJSON() {
         const categoryPath = path.join(scenesDir, category);
         if (fs.statSync(categoryPath).isDirectory()) {
             const files = fs.readdirSync(categoryPath).filter((f) => f.endsWith(".js"));
-            categories[category] = files.map((file) => ({
+            const formattedCategory = formatName(category); // 👈 formátování složek
+            categories[formattedCategory] = files.map((file) => ({
                 file: `scenes/${category}/${file}`,
                 name: formatName(file),
             }));
@@ -40,7 +41,7 @@ function generateScenesJSON() {
     fs.writeFileSync(outputFile, JSON.stringify(categories, null, 2));
     console.log(`✅ Soubor scenes.json byl vygenerován: ${outputFile}`);
 }
-
+// zkopíruje assetLoader.js do složky docs/src/
 function copyAssetLoader() {
     if (!fs.existsSync(docsSrcDir)) {
         fs.mkdirSync(docsSrcDir, { recursive: true });
